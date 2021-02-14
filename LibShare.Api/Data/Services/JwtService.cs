@@ -85,7 +85,7 @@ namespace LibShare.Api.Data.Services
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim("id", user.Id.ToString()),
+                new Claim("id", user.Id),
                 new Claim("email", user.Email)
             };
 

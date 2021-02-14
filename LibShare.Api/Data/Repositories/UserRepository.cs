@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Repositories
 {
-    public class UserRepository : ICrudRepository<DbUser, long>
+    public class UserRepository : ICrudRepository<DbUser, string>
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<DbUser> _userManager;
@@ -41,7 +41,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> Delete(long id)
+        public async Task<bool> Delete(string id)
         {
             DbUser user = _context.Users.Find(id);
             try
@@ -99,7 +99,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<DbUser> GetById(long id)
+        public async Task<DbUser> GetById(string id)
         {
             try
             {

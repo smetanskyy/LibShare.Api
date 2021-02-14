@@ -12,8 +12,7 @@ namespace LibShare.Api.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -27,8 +26,7 @@ namespace LibShare.Api.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -53,13 +51,13 @@ namespace LibShare.Api.Migrations
                 name: "tblCategories",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    ParentId = table.Column<long>(type: "bigint", nullable: true),
+                    ParentId = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
                     DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
@@ -79,7 +77,7 @@ namespace LibShare.Api.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<long>(type: "bigint", nullable: false),
+                    RoleId = table.Column<string>(type: "text", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -100,7 +98,7 @@ namespace LibShare.Api.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -122,7 +120,7 @@ namespace LibShare.Api.Migrations
                     LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,8 +137,8 @@ namespace LibShare.Api.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    RoleId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    RoleId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,7 +161,7 @@ namespace LibShare.Api.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
@@ -183,7 +181,7 @@ namespace LibShare.Api.Migrations
                 name: "tblToken",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     RefreshToken = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -202,13 +200,17 @@ namespace LibShare.Api.Migrations
                 name: "UserProfile",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Surname = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Photo = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    RegistrationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
+                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -225,8 +227,7 @@ namespace LibShare.Api.Migrations
                 name: "tblBooks",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Author = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Publisher = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
@@ -236,10 +237,11 @@ namespace LibShare.Api.Migrations
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     IsEbook = table.Column<bool>(type: "boolean", nullable: false),
                     File = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CategoryId = table.Column<long>(type: "bigint", nullable: true),
-                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    CategoryId = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
                     DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>

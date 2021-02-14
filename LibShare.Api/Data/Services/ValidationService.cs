@@ -3,6 +3,7 @@ using LibShare.Api.Data.ApiModels.RequestApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System.Resources;
 
 namespace LibShare.Api.Data.Services
 {
@@ -11,34 +12,36 @@ namespace LibShare.Api.Data.Services
     {
         private readonly UserManager<DbUser> _userManager;
         private readonly IRecaptchaService _recaptcha;
+        private readonly ResourceManager _resourceManager;
 
         private DbUser _user;
 
-        public LoginValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha)
+        public LoginValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha, ResourceManager resourceManager)
         {
             _userManager = userManager;
             _recaptcha = recaptcha;
+            _resourceManager = resourceManager;
 
             CascadeMode = CascadeMode.Stop;
 
-            //RuleFor(x => x.RecaptchaToken)
-            //    .NotNull().WithMessage("Recaptcha є обов'язковою!")
-            //    .Must(_recaptcha.IsValid).WithMessage("Роботи атакують!");
+            RuleFor(x => x.RecaptchaToken)
+                .NotNull().WithMessage(_resourceManager.GetString("RecaptchaRequired"))
+                .Must(_recaptcha.IsValid).WithMessage(_resourceManager.GetString("RecaptchaInvalid"));
 
             RuleFor(x => x.Email)
-                .NotNull().WithMessage("Електронна пошта є обов'язковою!")
-                .EmailAddress().WithMessage("Введіть дійсну електронну пошту!");
+                .NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
+                .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
 
             RuleFor(x => x.Password)
-                .NotNull().WithMessage("Пароль є обов'язковим!")
-                .Length(8, 20).WithMessage("Пароль має містити мінімум 8 символів і максимум 20 (включно)!")
-                .Matches(@"[A-Z]+").WithMessage("Пароль має містити щонайменше одну літеру верхнього регістру!")
-                .Matches(@"[a-z]+").WithMessage("Пароль має містити щонайменше одну літеру нижнього регістру!")
-                .Matches(@"[0-9]+").WithMessage("Пароль має містити щонайменше одну цифру!")
-                .Matches(@"[\W_]+").WithMessage("Пароль має містити щонайменше один спеціальний символ!");
+                .NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
+                .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
+                .Matches(@"[A-Z]+").WithMessage(_resourceManager.GetString("PasswordUppercase"))
+                .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
+                .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
+                .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
 
-            RuleFor(x => x.Email).Must(IsEmailExist).WithMessage("Логін або пароль неправильний!");
-            RuleFor(x => x.Password).Must(IsPasswordCorrect).WithMessage("Логін або пароль неправильний!");
+            RuleFor(x => x.Email).Must(IsEmailExist).WithMessage(_resourceManager.GetString("LoginOrPasswordInvalid"));
+            RuleFor(x => x.Password).Must(IsPasswordCorrect).WithMessage(_resourceManager.GetString("LoginOrPasswordInvalid"));
         }
 
         private bool IsEmailExist(string email)
@@ -57,36 +60,38 @@ namespace LibShare.Api.Data.Services
     {
         private readonly UserManager<DbUser> _userManager;
         private readonly IRecaptchaService _recaptcha;
+        private readonly ResourceManager _resourceManager;
 
-        public RegisterValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha)
+        public RegisterValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha, ResourceManager resourceManager)
         {
             _userManager = userManager;
             _recaptcha = recaptcha;
+            _resourceManager = resourceManager;
+
 
             CascadeMode = CascadeMode.Stop;
 
-            //RuleFor(x => x.RecaptchaToken)
-            //    .NotNull().WithMessage("Recaptcha є обов'язковою!")
-            //    .Must(_recaptcha.IsValid).WithMessage("Роботи атакують!");
+            RuleFor(x => x.RecaptchaToken)
+                .NotNull().WithMessage(_resourceManager.GetString("RecaptchaRequired"))
+                .Must(_recaptcha.IsValid).WithMessage(_resourceManager.GetString("RecaptchaInvalid"));
 
-            RuleFor(x => x.Email).NotNull().WithMessage("Електронна пошта є обов'язковою!")
-                .EmailAddress().WithMessage("Введіть дійсну електронну пошту!");
+            RuleFor(x => x.Email).NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
+                .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
 
-            RuleFor(x => x.Username).NotNull().WithMessage("Ім'я користувача є обов'язковим!")
-                .Length(2, 20).WithMessage("Ім'я користувача має містити мінімум 2 символа і максимум 20 (включно)!")
-                .Matches(@"[a-zA-z]+").WithMessage("Пароль має містити щонайменше одну латинську літеру!");
+            RuleFor(x => x.Username).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
+                .Length(2, 20).WithMessage(_resourceManager.GetString("UsernameLength"));
 
-            RuleFor(x => x.Password).NotNull().WithMessage("Пароль є обов'язковим!")
-                .Length(8, 20).WithMessage("Пароль має містити мінімум 8 символів і максимум 20 (включно)!")
-                .Matches(@"[A-Z]+").WithMessage("Пароль має містити щонайменше одну латинську літеру верхнього регістру!")
-                .Matches(@"[a-z]+").WithMessage("Пароль має містити щонайменше одну латинську літеру нижнього регістру!")
-                .Matches(@"[0-9]+").WithMessage("Пароль має містити щонайменше одну цифру!")
-                .Matches(@"[\W_]+").WithMessage("Пароль має містити щонайменше один спеціальний символ!");
+            RuleFor(x => x.Password).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
+                .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
+                .Matches(@"[A-Z]+").WithMessage(_resourceManager.GetString("PasswordUppercase"))
+                .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
+                .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
+                .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
 
-            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("Паролі не співпадають!");
+            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage(_resourceManager.GetString("PasswordsNotMatch"));
 
-            RuleFor(x => x.Email).Must(IsEmailNotExist).WithMessage("Електронна пошта вже існує!");
-            RuleFor(x => x.Username).Must(IsUsernameNotExist).WithMessage("Ім'я користувача вже існує!");
+            RuleFor(x => x.Email).Must(IsEmailNotExist).WithMessage(_resourceManager.GetString("EmailExist"));
+            RuleFor(x => x.Username).Must(IsUsernameNotExist).WithMessage(_resourceManager.GetString("UsernameExist"));
         }
 
         private bool IsEmailNotExist(string email)

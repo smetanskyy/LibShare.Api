@@ -2,28 +2,35 @@
 using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
+using LibShare.Api.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Services
 {
     public class UserService : IUserService
     {
-        private readonly ICrudRepository<DbUser, long> _userRepository;
+        private readonly ICrudRepository<DbUser, string> _userRepository;
         private readonly UserManager<DbUser> _userManager;
         private readonly SignInManager<DbUser> _signInManager;
         private readonly IJwtService _jwtService;
-        public UserService(ICrudRepository<DbUser, long> userRepository,
-            UserManager<DbUser> userManager, SignInManager<DbUser> signInManager,
-            IJwtService jwtService)
+        private readonly ResourceManager _resourceManager;
+
+        public UserService(ICrudRepository<DbUser, string> userRepository,
+            UserManager<DbUser> userManager, 
+            SignInManager<DbUser> signInManager,
+            IJwtService jwtService,
+            ResourceManager resourceManager)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _resourceManager = resourceManager;
         }
 
         public void Dispose()
@@ -38,16 +45,14 @@ namespace LibShare.Api.Data.Services
 
             if (user == null)
             {
-                tokenResponse.ErrorMessage = "Login or password is incorrect!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("LoginOrPasswordInvalid"));
             }
 
             var loginResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
             if (!loginResult.Succeeded)
             {
-                tokenResponse.ErrorMessage = "Login or password is incorrect!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("LoginOrPasswordInvalid"));
             }
 
             var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
@@ -64,25 +69,37 @@ namespace LibShare.Api.Data.Services
 
         public async Task<TokenResponseApiModel> RefreshToken(TokenRequestApiModel tokenApiModel)
         {
+            if(tokenApiModel.Token == null || tokenApiModel.RefreshToken == null)
+                throw new ArgumentNullException(_resourceManager.GetString("ArgumentNullException"));
+
             var tokenResponse = new TokenResponseApiModel();
 
             string accessToken = tokenApiModel.Token;
             string refreshToken = tokenApiModel.RefreshToken;
 
             var claims = _jwtService.GetClaimsFromExpiredToken(accessToken);
+
             if (claims == null)
             {
-                tokenResponse.ErrorMessage = "Invalid client request!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("InvalidClientRequest"));
             }
 
             var userId = claims.First(claim => claim.Type == "id").Value;
-            var user = await _userManager.Users.Include(u => u.Token).SingleAsync(x => x.Id == long.Parse(userId));
+            var user = await _userManager.Users.Include(u => u.Token).SingleAsync(x => x.Id == userId);
 
-            if (user == null || user.Token == null || user.Token.RefreshToken != refreshToken || user.Token.RefreshTokenExpiryTime <= DateTime.Now)
+            if (user == null)
             {
-                tokenResponse.ErrorMessage = "Invalid client request!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            if (user.Token == null || user.Token.RefreshToken != refreshToken)
+            {
+                throw new BadRequestException(_resourceManager.GetString("YouMustLogInFirst"));
+            }
+
+            if (user.Token.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                throw new BadRequestException(_resourceManager.GetString("RefreshTokenExpired"));
             }
 
             var newAccessToken = _jwtService.CreateToken(claims);
@@ -103,14 +120,12 @@ namespace LibShare.Api.Data.Services
 
             if (searchUser.Result != null)
             {
-                tokenResponse.ErrorMessage = "User already exist!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("UserAlreadyExists"));
             }
 
             if (!model.Password.Equals(model.ConfirmPassword))
             {
-                tokenResponse.ErrorMessage = "Password and confirm password don't match!";
-                return tokenResponse;
+                throw new BadRequestException(_resourceManager.GetString("PasswordsNotMatch"));
             }
 
             var dbUser = new DbUser
@@ -124,8 +139,7 @@ namespace LibShare.Api.Data.Services
             if (resultCreated == null) return tokenResponse;
             if (!resultCreated.Succeeded)
             {
-                tokenResponse.ErrorMessage = resultCreated.Errors.First().Description;
-                return tokenResponse;
+                throw new BadRequestException(resultCreated.Errors.First().Description);
             }
 
             var token = _jwtService.CreateToken(_jwtService.SetClaims(dbUser));

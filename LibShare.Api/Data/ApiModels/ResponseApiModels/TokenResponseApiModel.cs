@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace LibShare.Api.Data.ApiModels.ResponseApiModels
+﻿namespace LibShare.Api.Data.ApiModels.ResponseApiModels
 {
     /// <summary>
     /// A class for return authenticate results in response.
@@ -31,10 +29,5 @@ namespace LibShare.Api.Data.ApiModels.ResponseApiModels
         /// Gets or sets the refresh token for response result.
         /// </summary>
         public string RefreshToken { get; set; }
-
-        /// <summary>
-        /// Gets or sets error for response result.
-        /// </summary>
-        public string ErrorMessage { get; set; }
     }
 }

@@ -1,18 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace LibShare.Api.Data.ApiModels.RequestApiModels
+﻿namespace LibShare.Api.Data.ApiModels.RequestApiModels
 {
     public class UserRegisterApiModel
     {
-        [Required]
+        /// <summary>
+        /// User email
+        /// </summary>     
+        /// <example>example@gmail.com</example>
         public string Email { get; set; }
-        [Required]
+
+        /// <summary>
+        /// Login or email
+        /// </summary>
+        /// <example>Stepan</example>
         public string Username { get; set; }
-        [Required]
+
+        /// <summary>
+        /// User password
+        /// </summary>
+        /// <example>Qwerty1-</example>
         public string Password { get; set; }
-        [Required]
+
+        /// <summary>
+        /// User confirm password
+        /// </summary>
+        /// <example>Qwerty1-</example>
         public string ConfirmPassword { get; set; }
-        [Required]
+
+        /// <summary>
+        /// Google Recaptcha Token
+        /// </summary>
         public string RecaptchaToken { get; set; }
     }
 }

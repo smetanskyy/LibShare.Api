@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Entities
 {
-    public class DbUserRole : IdentityUserRole<long>
+    public class DbUserRole : IdentityUserRole<string>
     {
         public virtual DbUser User { get; set; }
         public virtual DbRole Role { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace LibShare.Api.Data.Entities
 {
     [Table("tblBooks")]
-    public class Book : BaseEntity<long>
+    public class Book : BaseEntity<string>
     {
         /// <summary>
         /// Title of book 
@@ -57,11 +57,11 @@ namespace LibShare.Api.Data.Entities
         [StringLength(255)]
         public string File { get; set; }
 
-        public virtual long? CategoryId { get; set; }
+        public virtual string CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
 
-        public virtual long? UserId { get; set; }
+        public virtual string UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual DbUser DbUser { get; set; }
     }

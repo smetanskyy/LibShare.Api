@@ -7,7 +7,7 @@ namespace LibShare.Api.Data.ViewModels
     public class UserIdVM
     {
         [Required]
-        public long Id { get; set; }
+        public string Id { get; set; }
     }
 
     public class UserVM

@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibShare.Api.Data;
 using LibShare.Api.Data.Entities;
@@ -5,6 +6,8 @@ using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Repositories;
 using LibShare.Api.Data.Services;
 using LibShare.Api.Helpers;
+using LibShare.Api.Infrastructure;
+using LibShare.Api.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,9 +22,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Resources;
 using System.Text;
 
 namespace LibShare.Api
@@ -40,17 +43,17 @@ namespace LibShare.Api
         {
             services.AddCors();
 
-            #region FluentValidation
-            services.AddMvc().AddFluentValidation();
-            #endregion
-
             services.Configure<FormOptions>(options =>
             {
-                // Set the limit to 256 MB
+                // Set the limit to 100 MB
                 options.ValueCountLimit = 1024;
                 options.KeyLengthLimit = 1024 * 2;
                 options.ValueLengthLimit = 1024 * 1024 * 100;
             });
+
+            #region FluentValidation
+            services.AddMvc().AddFluentValidation();
+            #endregion
 
             #region Swagger
             services.AddSwaggerGen(c =>
@@ -58,41 +61,34 @@ namespace LibShare.Api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "YPS API",
-                    Description = "A project  ASP.NET Core Web API",
-                    TermsOfService = new Uri("https://example.com/terms"),
+                    Title = "LIBSHARE API",
+                    Description = "A project ASP.NET Core Web API",
                     Contact = new OpenApiContact
                     {
-                        Name = "Team YPS",
-                        Email = string.Empty,
-                    },
-
+                        Name = "stepan inc.",
+                        Email = "stepan@gmail.com",
+                        Url = new Uri("https://github.com/smetanskyy/LibShare.Api.git")
+                    }
                 });
 
+                c.OperationFilter<AddAuthorizationHeaderOperationHeader>();
                 c.AddSecurityDefinition("Bearer",
                      new OpenApiSecurityScheme
                      {
-                         Description = "JWT Authorization header using the Bearer scheme.",
+                         Description = "JWT Authorization header. Use bearer token to authorize.",
                          Type = SecuritySchemeType.Http,
-                         Scheme = "bearer"
+                         Scheme = "bearer",
+                         BearerFormat = "JWT"
                      });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
-                    {
-                        new OpenApiSecurityScheme{
-                            Reference = new OpenApiReference{
-                                Id = "Bearer",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        },new List<string>()
-                    }
-                });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                if (File.Exists(xmlPath))
-                {
-                    c.IncludeXmlComments(xmlPath);
-                }
 
+                foreach (string xmlFile in Directory.EnumerateFiles(AppContext.BaseDirectory, "*.xml"))
+                {
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    if (File.Exists(xmlPath))
+                    {
+                        c.IncludeXmlComments(xmlPath);
+                    }
+                }
             });
             #endregion
 
@@ -104,12 +100,12 @@ namespace LibShare.Api
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<ICrudRepository<DbUser, long>, UserRepository>();
+            services.AddTransient<ICrudRepository<DbUser, string>, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRecaptchaService, RecaptchaService>();
 
             #region AutoMapper
-            // services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             #endregion
 
             #region JwtService
@@ -136,14 +132,22 @@ namespace LibShare.Api
             });
             #endregion
 
+            #region Strings
+            services.AddSingleton(new ResourceManager("LibShare.Api.Data.Resources.Messages", Assembly.GetExecutingAssembly()));
+            #endregion
+
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(
-              builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            #region CORS
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            #endregion
 
             if (env.IsDevelopment())
             {
@@ -162,16 +166,21 @@ namespace LibShare.Api
             });
             #endregion
 
+            app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            #region Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
+                c.IndexStream = () => GetType().Assembly.GetManifestResourceStream("LibShare.Api.Swagger.index.html");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LIBSHARE API V1");
             });
+            #endregion
 
-            // SeederDB.SeedDataByAS(app.ApplicationServices);
+            SeederDB.SeedDataByAS(app.ApplicationServices);
 
             app.UseEndpoints(endpoints =>
             {

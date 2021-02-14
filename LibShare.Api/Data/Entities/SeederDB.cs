@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 
 namespace LibShare.Api.Data.Entities
 {
@@ -90,11 +91,17 @@ namespace LibShare.Api.Data.Entities
                 var managerRole = scope.ServiceProvider.GetRequiredService<RoleManager<DbRole>>();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                System.Console.WriteLine("Appling migrations ... ");
+                Console.WriteLine("Appling migrations ... ");
                 context.Database.Migrate();
+                Console.WriteLine("Database migrated");
 
-                System.Console.WriteLine("Adding data - seeding ... ");
-                SeederDB.SeedData(manager, managerRole);
+                if (context.Users.Count() == 0)
+                {
+                    Console.WriteLine("Adding data - seeding ... ");
+                    SeedData(manager, managerRole);
+                }
+
+                Console.WriteLine("Database seeded.");
             }
         }
     }

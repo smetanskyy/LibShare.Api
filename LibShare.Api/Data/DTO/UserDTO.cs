@@ -25,6 +25,6 @@ namespace LibShare.Api.Data.DTO
 
     class IdDTO
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
     }
 }

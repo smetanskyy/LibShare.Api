@@ -6,7 +6,7 @@ namespace LibShare.Api.Data.Interfaces
 {
     public interface IUserService
     {
-        // Task<ResponseModel<T>> GetUserById(long id);
+        // Task<ResponseModel<T>> GetUserById(string id);
         // Task<ResponseModel<IEnumerable<T>>> GetAllUsers();
         // Task<ResponseModel<IEnumerable<T>>> FindUser(Expression<Func<T, bool>> predicate);
         // Task<ResponseModel<T>> CreateUser(UserDTO userDTO);
@@ -15,7 +15,7 @@ namespace LibShare.Api.Data.Interfaces
         Task<TokenResponseApiModel> RefreshToken(TokenRequestApiModel tokenApiModel);
 
         //Task<bool> UpdateUser(T user);
-        //Task<bool> DeleteUserById(long id);
+        //Task<bool> DeleteUserById(string id);
 
         void Dispose();
     }

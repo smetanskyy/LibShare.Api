@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LibShare.Api.Data.Entities
 {
     [Table("tblCategories")]
-    public class Category : BaseEntity<long>
+    public class Category : BaseEntity<string>
     {
         /// <summary>
         /// Name of category
@@ -22,7 +22,7 @@ namespace LibShare.Api.Data.Entities
         public virtual ICollection<Book> Books { get; set; }
 
         [ForeignKey("Parent")]
-        public virtual long? ParentId { get; set; }
+        public virtual string ParentId { get; set; }
         public virtual Category Parent { get; set; }
     }
 }

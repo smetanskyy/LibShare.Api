@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LibShare.Api.Data.Entities
 {
-    public class DbUser : IdentityUser<long>
+    public class DbUser : IdentityUser
     {
         public virtual ICollection<DbUserRole> UserRoles { get; set; }
         public virtual UserProfile UserProfile { get; set; }

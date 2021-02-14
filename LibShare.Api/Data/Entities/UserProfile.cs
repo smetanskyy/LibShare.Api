@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibShare.Api.Data.Entities
 {
-    public class UserProfile
+    public class UserProfile : BaseEntity<string>
     {
         [Key, ForeignKey("User")]
-        public long Id { get; set; }
+        public override string Id { get; set; }
 
         /// <summary>
         /// Ім'я користувача

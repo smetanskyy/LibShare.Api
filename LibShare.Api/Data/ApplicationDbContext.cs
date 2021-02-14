@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibShare.Api.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<DbUser, DbRole, long, IdentityUserClaim<long>, 
-        DbUserRole, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
+    public class ApplicationDbContext : IdentityDbContext<DbUser, DbRole, string, IdentityUserClaim<string>,
+        DbUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Book> Books { get; set; }
@@ -14,10 +14,7 @@ namespace LibShare.Api.Data
         public virtual DbSet<Token> Tokens { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-
-        }
+            : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -8,7 +8,7 @@ namespace LibShare.Api.Data.Entities
     public class Token
     {
         [Key, ForeignKey("User")]
-        public long Id { get; set; }
+        public string Id { get; set; }
         public virtual DbUser User { get; set; }
 
         /// <summary>
