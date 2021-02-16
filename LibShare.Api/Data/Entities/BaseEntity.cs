@@ -11,6 +11,7 @@ namespace LibShare.Api.Data.Entities
         public virtual DateTime? DateModify { get; set; }
         public virtual bool IsDelete { get; set; }
         public virtual DateTime? DateDelete { get; set; }
+        public virtual string DeletionReason { get; set; }
 
         public BaseEntity()
         {
@@ -18,6 +19,7 @@ namespace LibShare.Api.Data.Entities
             DateModify = null;
             IsDelete = false;
             DateDelete = null;
+            DeletionReason = null;
         }
     }
 }

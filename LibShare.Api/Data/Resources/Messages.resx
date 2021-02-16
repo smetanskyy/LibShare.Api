@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountExist" xml:space="preserve">
+    <value>Електронна пошта вже використовувалась раніше. Якщо це ваша, авторизуйтесь або скористайтесь відновленням доступу!</value>
+  </data>
   <data name="ArgumentNullException" xml:space="preserve">
     <value>Поле (одне із полів) не може бути пустим!</value>
   </data>

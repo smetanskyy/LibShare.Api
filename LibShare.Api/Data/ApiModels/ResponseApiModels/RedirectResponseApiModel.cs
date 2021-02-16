@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets or sets the link for redirect.
         /// </summary>
-        /// <example>https://site.com/api/Redirect</example>
+        /// <example>/api/restore/{id}</example>
         public string RedirectLink { get; set; }
         /// <summary>
         /// Gets or sets the message for the response.

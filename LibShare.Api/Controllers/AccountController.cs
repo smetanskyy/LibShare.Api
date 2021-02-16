@@ -65,7 +65,7 @@ namespace LibShare.Api.Controllers
         /// <returns>Object with user token and refresh token.</returns>
         /// <response code="201">Returns object with tokens.</response>
         /// <response code="400">Bad request. Returns message with error.</response>
-        /// <response code="409">Conflict. Returns message with error or returns redirect response api model</response>
+        /// <response code="409">Conflict. User is deleted. Returns redirect response api model</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("register")]
         [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status201Created)]

@@ -11,7 +11,7 @@
         /// <summary>
         /// Login or email
         /// </summary>
-        /// <example>Stepan</example>
+        /// <example>User</example>
         public string Username { get; set; }
 
         /// <summary>

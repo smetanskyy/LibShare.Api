@@ -23,6 +23,12 @@ namespace LibShare.Api.Infrastructure.Middleware
         public NotFoundException(string message) : base(message) { }
     }
 
+    public class UserIsDeletedException : Exception
+    {
+        public string UserId { get; set; }
+        public UserIsDeletedException(string message, string userId) : base(message) { base.Source = userId; }
+    }
+
 
     public class GlobalExceptionHandlerMiddleware
     {
@@ -68,8 +74,20 @@ namespace LibShare.Api.Infrastructure.Middleware
                     Message = desctiption.Message
                 };
 
+                var jsonOptions = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Formatting = Formatting.Indented
+                };
+
+                string result = null;
                 switch (error)
                 {
+                    case UserIsDeletedException _:
+                        response.StatusCode = (int)HttpStatusCode.Conflict;
+                        var actionUrl = $"/api/restore/{error.Source}";
+                        result = JsonConvert.SerializeObject(new RedirectResponseApiModel(actionUrl, error.Message), jsonOptions);
+                        break;
                     case DirectoryNotFoundException _:
                     case FileNotFoundException _:
                     case InvalidOperationException _:
@@ -90,18 +108,13 @@ namespace LibShare.Api.Infrastructure.Middleware
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        JsonConvert.SerializeObject(details, jsonOptions);
                         break;
                 }
 
-                var jsonOptions = new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Formatting = Formatting.Indented
-                };
+                if (string.IsNullOrWhiteSpace(result))
+                    result = JsonConvert.SerializeObject(desctiption, jsonOptions);
 
-                var result = response.StatusCode == 500
-                    ? JsonConvert.SerializeObject(details, jsonOptions)
-                    : JsonConvert.SerializeObject(desctiption, jsonOptions);
                 await response.WriteAsync(result);
             }
         }

@@ -2,7 +2,9 @@
 using LibShare.Api.Data.ApiModels.RequestApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
+using LibShare.Api.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
 namespace LibShare.Api.Data.Services
@@ -96,7 +98,13 @@ namespace LibShare.Api.Data.Services
 
         private bool IsEmailNotExist(string email)
         {
-            var user = _userManager.FindByEmailAsync(email).Result;
+            var user = _userManager.Users.Include(u => u.UserProfile).FirstOrDefaultAsync(x => x.Email == email).Result;
+            
+            if (user != null && user.UserProfile != null && user.UserProfile.IsDelete == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("AccountExist"), user.Id);
+            }
+
             return user == null ? true : false;
         }
 
