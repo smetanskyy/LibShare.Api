@@ -10,17 +10,9 @@ namespace LibShare.Api.Data.DTO
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Address { get; set; }
-        public List<string> Roles { get; set; }
         public string Photo { get; set; }
         public string Phone { get; set; }
         public DateTime? DateOfBirth { get; set; }
-    }
-
-    public class LoginDTO
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
     }
 
     class IdDTO

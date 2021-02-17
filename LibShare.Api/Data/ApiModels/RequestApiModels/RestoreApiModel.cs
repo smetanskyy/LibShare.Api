@@ -1,30 +1,29 @@
 ﻿namespace LibShare.Api.Data.ApiModels.RequestApiModels
 {
-    public class UserRegisterApiModel
+    public class RestoreApiModel
     {
         /// <summary>
         /// User email
-        /// </summary>     
+        /// </summary>
         /// <example>example@gmail.com</example>
         public string Email { get; set; }
 
         /// <summary>
-        /// Login or email
+        /// Secure token for reset password
         /// </summary>
-        /// <example>User</example>
-        public string Username { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
-        /// User password
+        /// User new password
         /// </summary>
         /// <example>Qwerty1-</example>
-        public string Password { get; set; }
+        public string NewPassword { get; set; }
 
         /// <summary>
-        /// User confirm password
+        /// Confirm new password
         /// </summary>
         /// <example>Qwerty1-</example>
-        public string ConfirmPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
 
         /// <summary>
         /// Google Recaptcha Token

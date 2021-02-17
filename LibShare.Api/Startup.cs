@@ -1,8 +1,8 @@
-using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibShare.Api.Data;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
+using LibShare.Api.Data.Interfaces.IRepositories;
 using LibShare.Api.Data.Repositories;
 using LibShare.Api.Data.Services;
 using LibShare.Api.Helpers;
@@ -103,6 +103,7 @@ namespace LibShare.Api
             services.AddTransient<ICrudRepository<DbUser, string>, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRecaptchaService, RecaptchaService>();
+            services.AddTransient<IEmailService, SendGridService>();
 
             #region AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -132,7 +133,7 @@ namespace LibShare.Api
             });
             #endregion
 
-            #region Strings
+            #region Resources.Messages
             services.AddSingleton(new ResourceManager("LibShare.Api.Data.Resources.Messages", Assembly.GetExecutingAssembly()));
             #endregion
 

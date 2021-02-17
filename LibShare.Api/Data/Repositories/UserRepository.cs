@@ -1,6 +1,6 @@
 ﻿using LibShare.Api.Data.Constants;
 using LibShare.Api.Data.Entities;
-using LibShare.Api.Data.Interfaces;
+using LibShare.Api.Data.Interfaces.IRepositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;

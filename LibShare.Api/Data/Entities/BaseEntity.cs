@@ -3,7 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LibShare.Api.Data.Entities
 {
-    public abstract class BaseEntity<T>
+    public interface IBaseEntity
+    {
+        public DateTime DateCreate { get; set; }
+        public DateTime? DateModify { get; set; }
+        public bool IsDelete { get; set; }
+        public DateTime? DateDelete { get; set; }
+        public string DeletionReason { get; set; }
+    }
+
+    public abstract class BaseEntity<T> : IBaseEntity
     {
         [Key]
         public virtual T Id { get; set; }

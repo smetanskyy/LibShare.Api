@@ -3,13 +3,12 @@
     public class TokenRequestApiModel
     {
         /// <summary>
-        /// A token containing user ID, email, and roles.
+        /// Gets or sets the token.
         /// </summary>
         public string Token { get; set; }
-
         /// <summary>
-        /// Disposable refresh token.
-        /// </summary>     
+        /// Gets or sets the refresh token.
+        /// </summary>
         public string RefreshToken { get; set; }
     }
 }

@@ -10,16 +10,32 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibShare.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210213144303_init")]
+    [Migration("20210217180854_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            modelBuilder.Entity("LibShare.Api.Data.Entities.AccessProhibited", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DateDelete")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletionReason")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tblAccessProhibited");
+                });
 
             modelBuilder.Entity("LibShare.Api.Data.Entities.Book", b =>
                 {
@@ -41,6 +57,9 @@ namespace LibShare.Api.Migrations
 
                     b.Property<DateTime?>("DateModify")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletionReason")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -102,6 +121,9 @@ namespace LibShare.Api.Migrations
 
                     b.Property<DateTime?>("DateModify")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletionReason")
+                        .HasColumnType("text");
 
                     b.Property<string>("Image")
                         .HasMaxLength(255)
@@ -168,6 +190,9 @@ namespace LibShare.Api.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
@@ -253,20 +278,8 @@ namespace LibShare.Api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("DateDelete")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("DateModify")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -299,7 +312,7 @@ namespace LibShare.Api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -323,7 +336,7 @@ namespace LibShare.Api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -385,6 +398,17 @@ namespace LibShare.Api.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("LibShare.Api.Data.Entities.AccessProhibited", b =>
+                {
+                    b.HasOne("LibShare.Api.Data.Entities.DbUser", "User")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LibShare.Api.Data.Entities.Book", b =>

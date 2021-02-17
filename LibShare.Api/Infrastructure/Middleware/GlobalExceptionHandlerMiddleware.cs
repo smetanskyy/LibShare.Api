@@ -25,8 +25,7 @@ namespace LibShare.Api.Infrastructure.Middleware
 
     public class UserIsDeletedException : Exception
     {
-        public string UserId { get; set; }
-        public UserIsDeletedException(string message, string userId) : base(message) { base.Source = userId; }
+        public UserIsDeletedException(string message) : base(message) { }
     }
 
 
@@ -84,15 +83,11 @@ namespace LibShare.Api.Infrastructure.Middleware
                 switch (error)
                 {
                     case UserIsDeletedException _:
-                        response.StatusCode = (int)HttpStatusCode.Conflict;
-                        var actionUrl = $"/api/restore/{error.Source}";
-                        result = JsonConvert.SerializeObject(new RedirectResponseApiModel(actionUrl, error.Message), jsonOptions);
-                        break;
-                    case DirectoryNotFoundException _:
-                    case FileNotFoundException _:
                     case InvalidOperationException _:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
+                    case DirectoryNotFoundException _:
+                    case FileNotFoundException _:
                     case KeyNotFoundException _:
                     case NotFoundException _:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -108,7 +103,7 @@ namespace LibShare.Api.Infrastructure.Middleware
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        JsonConvert.SerializeObject(details, jsonOptions);
+                        result = JsonConvert.SerializeObject(details, jsonOptions);
                         break;
                 }
 

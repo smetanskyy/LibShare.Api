@@ -27,6 +27,7 @@ namespace LibShare.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -58,7 +59,8 @@ namespace LibShare.Api.Migrations
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     IsDelete = table.Column<bool>(type: "boolean", nullable: false),
-                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletionReason = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -178,6 +180,25 @@ namespace LibShare.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tblAccessProhibited",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletionReason = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblAccessProhibited", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblAccessProhibited_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblToken",
                 columns: table => new
                 {
@@ -206,11 +227,7 @@ namespace LibShare.Api.Migrations
                     Photo = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
-                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    RegistrationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -242,7 +259,8 @@ namespace LibShare.Api.Migrations
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     IsDelete = table.Column<bool>(type: "boolean", nullable: false),
-                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletionReason = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -330,6 +348,9 @@ namespace LibShare.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "tblAccessProhibited");
 
             migrationBuilder.DropTable(
                 name: "tblBooks");

@@ -135,6 +135,9 @@
   <data name="EmailRequired" xml:space="preserve">
     <value>Електронна пошта є обов'язковою!</value>
   </data>
+  <data name="ErrorUnknown" xml:space="preserve">
+    <value>Попробуйте пізніше! Сервер зайнятий!</value>
+  </data>
   <data name="FormatException" xml:space="preserve">
     <value>Неправильний формат даних!</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="PasswordNumber" xml:space="preserve">
     <value>Пароль має містити щонайменше одну цифру!</value>
+  </data>
+  <data name="PasswordOldInvalid" xml:space="preserve">
+    <value>Введіть правильний старий пароль!</value>
   </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>Пароль є обов'язковим!</value>
@@ -174,11 +180,20 @@
   <data name="RefreshTokenExpired" xml:space="preserve">
     <value>Термін дії рефреш-токена закінчився!</value>
   </data>
+  <data name="RestoreInstruction" xml:space="preserve">
+    <value>Перейдіть за посиланням, відправленим на вказану електронну пошту для відновлення!</value>
+  </data>
+  <data name="RestorePassword" xml:space="preserve">
+    <value>Відновлення пароля!</value>
+  </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Користувач вже існує!</value>
   </data>
   <data name="UserDoesNotExist" xml:space="preserve">
     <value>Користувач не існує!</value>
+  </data>
+  <data name="UserIsDeleted" xml:space="preserve">
+    <value>Обліковий запис видалений або заблокований. Зверніться до адміністратора сайту!</value>
   </data>
   <data name="UsernameExist" xml:space="preserve">
     <value>Ім'я користувача вже існує!</value>

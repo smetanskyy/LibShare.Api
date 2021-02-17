@@ -1,26 +1,71 @@
 ﻿using FluentValidation;
 using LibShare.Api.Data.ApiModels.RequestApiModels;
-using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
-using LibShare.Api.Infrastructure.Middleware;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
 namespace LibShare.Api.Data.Services
 {
-
-    public class LoginValidator : AbstractValidator<UserLoginApiModel>
+    public class EmailValidator : AbstractValidator<EmailApiModel>
     {
-        private readonly UserManager<DbUser> _userManager;
         private readonly IRecaptchaService _recaptcha;
         private readonly ResourceManager _resourceManager;
 
-        private DbUser _user;
-
-        public LoginValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha, ResourceManager resourceManager)
+        public EmailValidator(IRecaptchaService recaptcha, ResourceManager resourceManager)
         {
-            _userManager = userManager;
+            _recaptcha = recaptcha;
+            _resourceManager = resourceManager;
+
+            CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.RecaptchaToken)
+                .NotNull().WithMessage(_resourceManager.GetString("RecaptchaRequired"))
+                .Must(_recaptcha.IsValid).WithMessage(_resourceManager.GetString("RecaptchaInvalid"));
+
+            RuleFor(x => x.Email)
+                .NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
+                .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
+        }
+    }
+
+    public class RestoreValidator : AbstractValidator<RestoreApiModel>
+    {
+        private readonly IRecaptchaService _recaptcha;
+        private readonly ResourceManager _resourceManager;
+
+        public RestoreValidator(IRecaptchaService recaptcha, ResourceManager resourceManager)
+        {
+            _recaptcha = recaptcha;
+            _resourceManager = resourceManager;
+
+            CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.RecaptchaToken)
+                .NotNull().WithMessage(_resourceManager.GetString("RecaptchaRequired"))
+                .Must(_recaptcha.IsValid).WithMessage(_resourceManager.GetString("RecaptchaInvalid"));
+
+            RuleFor(x => x.Email)
+                .NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
+                .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
+
+            RuleFor(x => x.NewPassword).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
+                .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
+                .Matches(@"[A-Z]+").WithMessage(_resourceManager.GetString("PasswordUppercase"))
+                .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
+                .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
+                .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
+
+            RuleFor(x => x.ConfirmNewPassword).Equal(x => x.NewPassword).WithMessage(_resourceManager.GetString("PasswordsNotMatch"));
+        }
+    }
+
+    public class LoginValidator : AbstractValidator<UserLoginApiModel>
+    {
+        private readonly IRecaptchaService _recaptcha;
+        private readonly ResourceManager _resourceManager;
+
+        public LoginValidator(IRecaptchaService recaptcha, ResourceManager resourceManager)
+        {
             _recaptcha = recaptcha;
             _resourceManager = resourceManager;
 
@@ -41,32 +86,16 @@ namespace LibShare.Api.Data.Services
                 .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
                 .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
                 .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
-
-            RuleFor(x => x.Email).Must(IsEmailExist).WithMessage(_resourceManager.GetString("LoginOrPasswordInvalid"));
-            RuleFor(x => x.Password).Must(IsPasswordCorrect).WithMessage(_resourceManager.GetString("LoginOrPasswordInvalid"));
-        }
-
-        private bool IsEmailExist(string email)
-        {
-            _user = _userManager.FindByEmailAsync(email).Result;
-            return _user != null ? true : false;
-        }
-
-        private bool IsPasswordCorrect(string password)
-        {
-            return _userManager.CheckPasswordAsync(_user, password).Result;
         }
     }
 
     public class RegisterValidator : AbstractValidator<UserRegisterApiModel>
     {
-        private readonly UserManager<DbUser> _userManager;
         private readonly IRecaptchaService _recaptcha;
         private readonly ResourceManager _resourceManager;
 
-        public RegisterValidator(UserManager<DbUser> userManager, IRecaptchaService recaptcha, ResourceManager resourceManager)
+        public RegisterValidator(IRecaptchaService recaptcha, ResourceManager resourceManager)
         {
-            _userManager = userManager;
             _recaptcha = recaptcha;
             _resourceManager = resourceManager;
 
@@ -89,29 +118,40 @@ namespace LibShare.Api.Data.Services
                 .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
                 .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
                 .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
-
-            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage(_resourceManager.GetString("PasswordsNotMatch"));
-
-            RuleFor(x => x.Email).Must(IsEmailNotExist).WithMessage(_resourceManager.GetString("EmailExist"));
-            RuleFor(x => x.Username).Must(IsUsernameNotExist).WithMessage(_resourceManager.GetString("UsernameExist"));
         }
+    }
 
-        private bool IsEmailNotExist(string email)
+    public class ChangePasswordValidator : AbstractValidator<ChangePasswordApiModel>
+    {
+        private readonly IRecaptchaService _recaptcha;
+        private readonly ResourceManager _resourceManager;
+
+        public ChangePasswordValidator(IRecaptchaService recaptcha, ResourceManager resourceManager)
         {
-            var user = _userManager.Users.Include(u => u.UserProfile).FirstOrDefaultAsync(x => x.Email == email).Result;
-            
-            if (user != null && user.UserProfile != null && user.UserProfile.IsDelete == true)
-            {
-                throw new UserIsDeletedException(_resourceManager.GetString("AccountExist"), user.Id);
-            }
+            _recaptcha = recaptcha;
+            _resourceManager = resourceManager;
 
-            return user == null ? true : false;
-        }
+            CascadeMode = CascadeMode.Stop;
 
-        private bool IsUsernameNotExist(string username)
-        {
-            var user = _userManager.FindByNameAsync(username).Result;
-            return user == null ? true : false;
+            RuleFor(x => x.RecaptchaToken)
+                .NotNull().WithMessage(_resourceManager.GetString("RecaptchaRequired"))
+                .Must(_recaptcha.IsValid).WithMessage(_resourceManager.GetString("RecaptchaInvalid"));
+
+            RuleFor(x => x.OldPassword).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
+                .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
+                .Matches(@"[A-Z]+").WithMessage(_resourceManager.GetString("PasswordUppercase"))
+                .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
+                .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
+                .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
+
+            RuleFor(x => x.NewPassword).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
+                .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
+                .Matches(@"[A-Z]+").WithMessage(_resourceManager.GetString("PasswordUppercase"))
+                .Matches(@"[a-z]+").WithMessage(_resourceManager.GetString("PasswordLowercase"))
+                .Matches(@"[0-9]+").WithMessage(_resourceManager.GetString("PasswordNumber"))
+                .Matches(@"[\W_]+").WithMessage(_resourceManager.GetString("PasswordW"));
+
+            RuleFor(x => x.ConfirmNewPassword).Equal(x => x.NewPassword).WithMessage(_resourceManager.GetString("PasswordsNotMatch"));
         }
     }
 }

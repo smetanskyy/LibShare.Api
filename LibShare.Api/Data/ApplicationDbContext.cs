@@ -12,6 +12,8 @@ namespace LibShare.Api.Data
         public virtual DbSet<Book> Books { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
+        public virtual DbSet<AccessProhibited> AccessProhibited { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

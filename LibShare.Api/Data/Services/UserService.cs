@@ -1,8 +1,11 @@
 ﻿using LibShare.Api.Data.ApiModels.RequestApiModels;
 using LibShare.Api.Data.ApiModels.ResponseApiModels;
+using LibShare.Api.Data.Constants;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
+using LibShare.Api.Data.Interfaces.IRepositories;
 using LibShare.Api.Infrastructure.Middleware;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,18 +22,21 @@ namespace LibShare.Api.Data.Services
         private readonly SignInManager<DbUser> _signInManager;
         private readonly IJwtService _jwtService;
         private readonly ResourceManager _resourceManager;
+        private readonly IEmailService _emailService;
 
         public UserService(ICrudRepository<DbUser, string> userRepository,
-            UserManager<DbUser> userManager, 
+            UserManager<DbUser> userManager,
             SignInManager<DbUser> signInManager,
             IJwtService jwtService,
-            ResourceManager resourceManager)
+            ResourceManager resourceManager,
+            IEmailService emailService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
             _resourceManager = resourceManager;
+            _emailService = emailService;
         }
 
         public void Dispose()
@@ -40,12 +46,16 @@ namespace LibShare.Api.Data.Services
 
         public async Task<TokenResponseApiModel> LoginUser(UserLoginApiModel model)
         {
-            var tokenResponse = new TokenResponseApiModel();
-            var user = await _userRepository.GetByEmail(model.Email);
+            var user = _userManager.FindByEmailAsync(model.Email).Result;
 
             if (user == null)
             {
                 throw new BadRequestException(_resourceManager.GetString("LoginOrPasswordInvalid"));
+            }
+
+            if (user != null && user.IsDeleted == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
             }
 
             var loginResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
@@ -61,18 +71,13 @@ namespace LibShare.Api.Data.Services
             await _userRepository.UpdateUserToken(user, refreshToken);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            tokenResponse.Token = token;
-            tokenResponse.RefreshToken = refreshToken;
-
-            return tokenResponse;
+            return new TokenResponseApiModel(token, refreshToken);
         }
 
         public async Task<TokenResponseApiModel> RefreshToken(TokenRequestApiModel tokenApiModel)
         {
-            if(tokenApiModel.Token == null || tokenApiModel.RefreshToken == null)
+            if (tokenApiModel.Token == null || tokenApiModel.RefreshToken == null)
                 throw new ArgumentNullException(_resourceManager.GetString("ArgumentNullException"));
-
-            var tokenResponse = new TokenResponseApiModel();
 
             string accessToken = tokenApiModel.Token;
             string refreshToken = tokenApiModel.RefreshToken;
@@ -107,25 +112,33 @@ namespace LibShare.Api.Data.Services
 
             await _userRepository.UpdateUserToken(user, newRefreshToken);
 
-            tokenResponse.Token = newAccessToken;
-            tokenResponse.RefreshToken = newRefreshToken;
-            return tokenResponse;
+            return new TokenResponseApiModel { Token = newAccessToken, RefreshToken = newRefreshToken };
         }
 
         public async Task<TokenResponseApiModel> RegisterUser(UserRegisterApiModel model)
         {
-            var tokenResponse = new TokenResponseApiModel();
+            var searchUser = _userManager.FindByEmailAsync(model.Email).Result;
 
-            var searchUser = _userManager.FindByEmailAsync(model.Email);
-
-            if (searchUser.Result != null)
+            if (searchUser != null && searchUser.IsDeleted == true)
             {
-                throw new BadRequestException(_resourceManager.GetString("UserAlreadyExists"));
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
             }
+
+            if (searchUser != null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("EmailExist"));
+            }
+
 
             if (!model.Password.Equals(model.ConfirmPassword))
             {
                 throw new BadRequestException(_resourceManager.GetString("PasswordsNotMatch"));
+            }
+            
+            var userByUsername = _userManager.FindByNameAsync(model.Username).Result;
+            if (userByUsername != null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UsernameExist"));
             }
 
             var dbUser = new DbUser
@@ -136,7 +149,6 @@ namespace LibShare.Api.Data.Services
 
             var resultCreated = await _userRepository.Create(dbUser, model.Password);
 
-            if (resultCreated == null) return tokenResponse;
             if (!resultCreated.Succeeded)
             {
                 throw new BadRequestException(resultCreated.Errors.First().Description);
@@ -148,10 +160,97 @@ namespace LibShare.Api.Data.Services
             await _userRepository.UpdateUserToken(dbUser, refreshToken);
             await _signInManager.SignInAsync(dbUser, isPersistent: false);
 
-            tokenResponse.Token = token;
-            tokenResponse.RefreshToken = refreshToken;
+            return new TokenResponseApiModel { Token = token, RefreshToken = refreshToken };
+        }
 
-            return tokenResponse;
+        public async Task<MessageApiModel> RestorePasswordSendLinkOnEmail(string userEmail, HttpRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            if (user != null && user.IsDeleted == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var serverUrl = $"{request.Scheme}://{request.Host}/";
+            var url = serverUrl + $"restore?email={user.Email}&token={token}";
+
+            var topic = _resourceManager.GetString("RestorePassword");
+
+            var html = HtmlStrings.GetHtmlEmailForRestorePassword(url);
+
+            await _emailService.SendAsync(userEmail, topic, html);
+
+            return new MessageApiModel { Message = _resourceManager.GetString("RestoreInstruction") };
+        }
+
+        public async Task<TokenResponseApiModel> RestorePasswordBase(RestoreApiModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            if (user != null && user.IsDeleted == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
+            }
+
+            var restoreResult = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
+            if (!restoreResult.Succeeded)
+            {
+                throw new BadRequestException(restoreResult.Errors.First().Description);
+            }
+
+            var loginResult = await _signInManager.PasswordSignInAsync(user, model.NewPassword, false, false);
+
+            if (!loginResult.Succeeded)
+            {
+                throw new BadRequestException(_resourceManager.GetString("LoginOrPasswordInvalid"));
+            }
+
+            var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
+            var refreshToken = _jwtService.CreateRefreshToken();
+
+            await _userRepository.UpdateUserToken(user, refreshToken);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return new TokenResponseApiModel(token, refreshToken);
+        }
+
+        public async Task<TokenResponseApiModel> ChangeUserPassword(ChangePasswordApiModel model, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            var changeResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (!changeResult.Succeeded)
+            {
+                throw new BadRequestException(_resourceManager.GetString("PasswordOldInvalid"));
+            }
+
+            var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
+            var refreshToken = _jwtService.CreateRefreshToken();
+
+            await _userRepository.UpdateUserToken(user, refreshToken);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return new TokenResponseApiModel(token, refreshToken);
         }
     }
 }

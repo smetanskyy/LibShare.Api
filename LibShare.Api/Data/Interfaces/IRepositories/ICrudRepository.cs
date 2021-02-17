@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace LibShare.Api.Data.Interfaces
+namespace LibShare.Api.Data.Interfaces.IRepositories
 {
     public interface ICrudRepository<Type, TypeId> : IDisposable
     where Type : class

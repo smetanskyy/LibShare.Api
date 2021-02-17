@@ -3,10 +3,10 @@ using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
@@ -20,34 +20,33 @@ namespace LibShare.Api.Controllers
     {
         private readonly IUserService _userService;
         private readonly IRecaptchaService _recaptcha;
-        private readonly UserManager<DbUser> _userManager;
         private readonly ResourceManager _resourceManager;
 
-        public AccountController(IUserService userService, 
-            IRecaptchaService recaptcha, 
-            UserManager<DbUser> userManager, 
+        public AccountController(IUserService userService,
+            IRecaptchaService recaptcha,
             ResourceManager resourceManager)
         {
             _userService = userService;
             _recaptcha = recaptcha;
-            _userManager = userManager;
             _resourceManager = resourceManager;
         }
 
         /// <summary>
-        /// Login user into system.
+        /// Logins user into system.
         /// </summary>
-        /// <returns>Object with user token and refresh token.</returns>
+        /// <returns>Returns object with user token and refresh token.</returns>
         /// <response code="200">Returns object with tokens.</response>
         /// <response code="400">Bad request. Returns message with error.</response>
+        /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("login")]
         [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] UserLoginApiModel model)
         {
-            var validator = new LoginValidator(_userManager, _recaptcha, _resourceManager);
+            var validator = new LoginValidator(_recaptcha, _resourceManager);
             var validResult = validator.Validate(model);
 
             if (!validResult.IsValid)
@@ -62,20 +61,19 @@ namespace LibShare.Api.Controllers
         /// <summary>
         /// Registers a new user and logs in.
         /// </summary>
-        /// <returns>Object with user token and refresh token.</returns>
+        /// <returns>Returns object with user token and refresh token.</returns>
         /// <response code="201">Returns object with tokens.</response>
         /// <response code="400">Bad request. Returns message with error.</response>
-        /// <response code="409">Conflict. User is deleted. Returns redirect response api model</response>
+        /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("register")]
         [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(RedirectResponseApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register([FromBody] UserRegisterApiModel model)
         {
-            var validator = new RegisterValidator(_userManager, _recaptcha, _resourceManager);
+            var validator = new RegisterValidator(_recaptcha, _resourceManager);
             var validResult = validator.Validate(model);
 
             if (!validResult.IsValid)
@@ -88,9 +86,9 @@ namespace LibShare.Api.Controllers
         }
 
         /// <summary>
-        /// Refresh tokens.
+        /// Refreshes tokens.
         /// </summary>
-        /// <returns>Object with user token and refresh token.</returns>
+        /// <returns>Returns object with user token and refresh token.</returns>
         /// <response code="200">Returns object with tokens.</response>
         /// <response code="400">Bad request. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
@@ -110,6 +108,89 @@ namespace LibShare.Api.Controllers
 
             var resultRefreshToken = await _userService.RefreshToken(model);
             return Ok(resultRefreshToken);
+        }
+
+
+        /// <summary>
+        /// Restores user password Part 1. Get restore link.
+        /// </summary>
+        /// <returns>Returns object with restore link</returns>
+        /// <response code="200">Restore link have been sent on email.</response>
+        /// <response code="400">Restore link haven't been sent on email.</response>
+        /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("restore-link")]
+        public async Task<IActionResult> RestorePasswordSendLinkOnEmail([FromBody] EmailApiModel model)
+        {
+            var validator = new EmailValidator(_recaptcha, _resourceManager);
+            var validResult = validator.Validate(model);
+
+            if (!validResult.IsValid)
+            {
+                return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
+            }
+
+            var result = await _userService.RestorePasswordSendLinkOnEmail(model.Email, Request);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Restores user password Part 2. Set new password.
+        /// </summary>
+        /// <returns>Returns object with user token and refresh token.</returns>
+        /// <response code="200">Password have been restored.</response>
+        /// <response code="400">Password haven't been restored.</response>
+        /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("restore-password")]
+        public async Task<IActionResult> RestorePasswordBase([FromBody] RestoreApiModel model)
+        {
+            var validator = new RestoreValidator(_recaptcha, _resourceManager);
+            var validResult = validator.Validate(model);
+
+            if (!validResult.IsValid)
+            {
+                return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
+            }
+            
+            var result = await _userService.RestorePasswordBase(model);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Change the authorized user password.
+        /// </summary>
+        /// <returns>Returns object with user token and refresh token.</returns>
+        /// <response code="200">Password have been updated.</response>
+        /// <response code="400">Password haven't been updated.</response>
+        /// <response code="401">If user is unauthorized or token is bad/expired.</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordApiModel model)
+        {
+            var validator = new ChangePasswordValidator(_recaptcha, _resourceManager);
+            var validResult = validator.Validate(model);
+
+            if (!validResult.IsValid)
+            {
+                return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
+            }
+
+            var userId = User.FindFirst("id")?.Value;
+            var result = await _userService.ChangeUserPassword(model, userId);
+            return Ok(result);
         }
     }
 }
