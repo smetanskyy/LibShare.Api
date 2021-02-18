@@ -65,11 +65,11 @@ namespace LibShare.Api.Controllers
         /// <response code="400">Bad request. Returns message with error.</response>
         /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
-        [HttpPost("register")]
         [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterApiModel model)
         {
             var validator = new RegisterValidator(_recaptcha, _resourceManager);
@@ -91,10 +91,10 @@ namespace LibShare.Api.Controllers
         /// <response code="200">Returns object with tokens.</response>
         /// <response code="400">Bad request. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
-        [HttpPost("refreshtoken")]
         [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenApiModel model)
         {
             if (!ModelState.IsValid)

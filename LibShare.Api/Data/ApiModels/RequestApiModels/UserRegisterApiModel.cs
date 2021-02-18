@@ -12,7 +12,7 @@
         /// Login or email
         /// </summary>
         /// <example>User</example>
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// User password

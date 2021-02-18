@@ -41,7 +41,7 @@ namespace LibShare.Api.Data.Entities
         /// <summary>
         /// Дата реєстрації
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
 
         public virtual DbUser User { get; set; }
     }

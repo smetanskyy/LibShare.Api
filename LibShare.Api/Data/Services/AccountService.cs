@@ -125,13 +125,12 @@ namespace LibShare.Api.Data.Services
                 throw new BadRequestException(_resourceManager.GetString("EmailExist"));
             }
 
-
             if (!model.Password.Equals(model.ConfirmPassword))
             {
                 throw new BadRequestException(_resourceManager.GetString("PasswordsNotMatch"));
             }
 
-            var userByUsername = _userManager.FindByNameAsync(model.Username).Result;
+            var userByUsername = _userManager.FindByNameAsync(model.UserName).Result;
             if (userByUsername != null)
             {
                 throw new BadRequestException(_resourceManager.GetString("UsernameExist"));
@@ -140,7 +139,7 @@ namespace LibShare.Api.Data.Services
             var dbUser = new DbUser
             {
                 Email = model.Email,
-                UserName = model.Username
+                UserName = model.UserName
             };
 
             var resultCreated = await _userRepository.CreateAsync(dbUser, model.Password);

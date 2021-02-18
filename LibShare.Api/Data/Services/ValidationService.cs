@@ -110,7 +110,7 @@ namespace LibShare.Api.Data.Services
             RuleFor(x => x.Email).NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
                 .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
 
-            RuleFor(x => x.Username).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
+            RuleFor(x => x.UserName).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
                 .Length(2, 20).WithMessage(_resourceManager.GetString("UsernameLength"));
 
             RuleFor(x => x.Password).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
@@ -158,14 +158,17 @@ namespace LibShare.Api.Data.Services
 
     public class ImageBase64Validator : AbstractValidator<ImageApiModel>
     {
-        public ImageBase64Validator()
+        private readonly ResourceManager _resourceManager;
+        public ImageBase64Validator(ResourceManager resourceManager)
         {
+            _resourceManager = resourceManager;
+
             CascadeMode = CascadeMode.Stop;
 
             RuleFor(x => x.Photo)
-                .NotEmpty().WithMessage("Фото є обов'язковим.")
-                .Must(e => e.Contains("image")).WithMessage("Введіть фото у форматі base64 з типом image.")
-                .Must(IsBase64).WithMessage("Введіть фото у форматі base64.");
+                .NotEmpty().WithMessage(_resourceManager.GetString("PhotoBase64Required"))
+                .Must(e => e.Contains("image")).WithMessage(_resourceManager.GetString("PhotoBase64FormatType"))
+                .Must(IsBase64).WithMessage(_resourceManager.GetString("PhotoBase64Format"));
         }
 
         private bool IsBase64(string imagebase64)
@@ -177,6 +180,34 @@ namespace LibShare.Api.Data.Services
             }
             Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
             return Convert.TryFromBase64String(base64, buffer, out _);
+        }
+    }
+
+    public class UserApiModelValidator : AbstractValidator<UserApiModel>
+    {
+        private readonly ResourceManager _resourceManager;
+        public UserApiModelValidator(ResourceManager resourceManager)
+        {
+            _resourceManager = resourceManager;
+
+            CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.Email).NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
+                .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
+
+            RuleFor(x => x.UserName).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
+                .Length(2, 20).WithMessage(_resourceManager.GetString("UsernameLength"));
+
+            RuleFor(x => x.DateOfBirth)
+                .Must(IsValidDate).WithMessage(_resourceManager.GetString("DateOfBirthFormat"));
+        }
+
+        private bool IsValidDate(DateTime? date)
+        {
+            if (date == null)
+                return true;
+
+            return !date.Equals(default(DateTime));
         }
     }
 }

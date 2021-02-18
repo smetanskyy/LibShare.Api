@@ -15,8 +15,8 @@ namespace LibShare.Api.Data.Mapping
         {
             AllowNullCollections = true;
             CreateMap<DbUser, UserDTO>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserProfile == null ? "unknown" : src.UserProfile.Name))
-                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserProfile == null ? "unknown" : src.UserProfile.Surname))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserProfile.Name ?? null))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserProfile.Surname ?? null))
                 .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.UserProfile.Photo ?? null))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.UserProfile.Phone ?? null))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.UserProfile.DateOfBirth ?? null));
@@ -24,8 +24,8 @@ namespace LibShare.Api.Data.Mapping
             CreateMap<UserApiModel, UserDTO>().ReverseMap();
 
             CreateMap<DbUser, UserApiModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserProfile == null ? "unknown" : src.UserProfile.Name))
-                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserProfile == null ? "unknown" : src.UserProfile.Surname))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserProfile.Name ?? null))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserProfile.Surname ?? null))
                 .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.UserProfile.Photo ?? null))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.UserProfile.Phone ?? null))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.UserProfile.DateOfBirth ?? null));

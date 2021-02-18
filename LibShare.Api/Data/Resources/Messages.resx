@@ -126,6 +126,9 @@
   <data name="BadImageFormatException" xml:space="preserve">
     <value>Неправильний формат зображення!</value>
   </data>
+  <data name="DateOfBirthFormat" xml:space="preserve">
+    <value>Введіть дату народження у валідній формі!</value>
+  </data>
   <data name="EmailExist" xml:space="preserve">
     <value>Електронна пошта вже існує!</value>
   </data>
@@ -171,6 +174,15 @@
   <data name="PasswordW" xml:space="preserve">
     <value>Пароль має містити щонайменше один спеціальний символ!</value>
   </data>
+  <data name="PhotoBase64Format" xml:space="preserve">
+    <value>Введіть фото у форматі base64!</value>
+  </data>
+  <data name="PhotoBase64FormatType" xml:space="preserve">
+    <value>Введіть фото у форматі base64 з типом image!</value>
+  </data>
+  <data name="PhotoBase64Required" xml:space="preserve">
+    <value>Фото є обов'язковим!</value>
+  </data>
   <data name="RecaptchaInvalid" xml:space="preserve">
     <value>Роботи атакують!</value>
   </data>
@@ -203,6 +215,12 @@
   </data>
   <data name="UsernameRequired" xml:space="preserve">
     <value>Ім'я користувача є обов'язковим!</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Користувача не знайдено!</value>
+  </data>
+  <data name="UsersNotFound" xml:space="preserve">
+    <value>Користувачів не знайдено. База пуста!</value>
   </data>
   <data name="YouMustLogInFirst" xml:space="preserve">
     <value>Спочатку потрібно авторизуватись!</value>

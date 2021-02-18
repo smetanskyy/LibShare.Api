@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using LibShare.Api.Data.Constants;
-using LibShare.Api.Data.DTO;
+﻿using LibShare.Api.Data.Constants;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces.IRepositories;
 using Microsoft.AspNetCore.Identity;
@@ -44,12 +42,14 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(string id, string deletionReason)
         {
             DbUser user = _context.Users.Find(id);
             try
             {
-                _context.Users.Remove(user);
+                user.IsDeleted = true;
+                var record = new AccessProhibited { DateDelete = DateTime.Now, Id = id, DeletionReason = deletionReason };
+                _context.AccessProhibited.Add(record);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -82,14 +82,13 @@ namespace LibShare.Api.Data.Repositories
             {
                 return null;
             }
-
         }
 
         public async Task<IEnumerable<DbUser>> GetAllAsync()
         {
             try
             {
-                return await _context.Users.ToListAsync();
+                return await _context.Users.Include(x => x.UserProfile).ToListAsync();
             }
             catch (Exception)
             {
@@ -101,7 +100,7 @@ namespace LibShare.Api.Data.Repositories
         {
             try
             {
-                return await _context.Users.FindAsync(id);
+                return await _context.Users.Include(x => x.UserProfile).SingleAsync(u => u.Id == id);
             }
             catch (Exception)
             {
@@ -113,8 +112,7 @@ namespace LibShare.Api.Data.Repositories
         {
             try
             {
-                _context.Users.Update(item);
-                await _context.SaveChangesAsync();
+                await _userManager.UpdateAsync(item);
                 return true;
             }
             catch (Exception)
@@ -152,6 +150,23 @@ namespace LibShare.Api.Data.Repositories
         public void Dispose()
         {
             _context.Dispose();
+        }
+
+        public async Task<bool> UpdateUserPhotoAsync(DbUser user, string photo)
+        {
+            if (user == null || string.IsNullOrWhiteSpace(photo)) return false;
+
+            var userProfile = _context.UserProfile.Find(user.Id);
+
+            if (userProfile == null)
+            {
+                userProfile = new UserProfile { Id = user.Id, RegistrationDate = DateTime.Now };
+            }
+
+            userProfile.Photo = photo;
+            _context.UserProfile.Update(userProfile);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

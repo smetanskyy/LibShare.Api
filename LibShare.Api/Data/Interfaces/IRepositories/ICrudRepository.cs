@@ -11,11 +11,12 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
     {
         Task<IdentityResult> CreateAsync(Type item, string password);
         Task<bool> UpdateAsync(Type item);
-        Task<bool> DeleteAsync(TypeId id);
+        Task<bool> DeleteAsync(TypeId id, string deletionReason);
         Task<Type> GetByIdAsync(TypeId id);
         Task<Type> GetByEmailAsync(string email);
         Task<IEnumerable<Type>> GetAllAsync();
         Task<IEnumerable<Type>> FindAsync(Expression<Func<Type, bool>> predicate);
         Task<bool> UpdateUserTokenAsync(Type user, string refreshToken);
+        Task<bool> UpdateUserPhotoAsync(Type user, string photo);
     }
 }
