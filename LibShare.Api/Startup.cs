@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using LibShare.Api.Data;
+using LibShare.Api.Data.ApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
@@ -100,10 +101,13 @@ namespace LibShare.Api
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            #region Interfaces
             services.AddTransient<ICrudRepository<DbUser, string>, UserRepository>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAccountService<TokenApiModel>, AccountService>();
+            services.AddTransient<IUserService<UserApiModel>, UserService>();
             services.AddTransient<IRecaptchaService, RecaptchaService>();
             services.AddTransient<IEmailService, SendGridService>();
+            #endregion
 
             #region AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

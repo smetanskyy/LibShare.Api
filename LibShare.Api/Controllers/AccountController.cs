@@ -1,11 +1,10 @@
-﻿using LibShare.Api.Data.ApiModels.RequestApiModels;
+﻿using LibShare.Api.Data.ApiModels;
+using LibShare.Api.Data.ApiModels.RequestApiModels;
 using LibShare.Api.Data.ApiModels.ResponseApiModels;
-using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Resources;
@@ -18,15 +17,15 @@ namespace LibShare.Api.Controllers
     [Produces("application/json")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService<TokenApiModel> _accountService;
         private readonly IRecaptchaService _recaptcha;
         private readonly ResourceManager _resourceManager;
 
-        public AccountController(IUserService userService,
+        public AccountController(IAccountService<TokenApiModel> accountService,
             IRecaptchaService recaptcha,
             ResourceManager resourceManager)
         {
-            _userService = userService;
+            _accountService = accountService;
             _recaptcha = recaptcha;
             _resourceManager = resourceManager;
         }
@@ -40,7 +39,7 @@ namespace LibShare.Api.Controllers
         /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("login")]
-        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
@@ -54,7 +53,7 @@ namespace LibShare.Api.Controllers
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
 
-            var loginResult = await _userService.LoginUser(model);
+            var loginResult = await _accountService.LoginUserAsync(model);
             return Ok(loginResult);
         }
 
@@ -67,7 +66,7 @@ namespace LibShare.Api.Controllers
         /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("register")]
-        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
@@ -81,7 +80,7 @@ namespace LibShare.Api.Controllers
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
 
-            var RegisterResult = await _userService.RegisterUser(model);
+            var RegisterResult = await _accountService.RegisterUserAsync(model);
             return Created("", RegisterResult);
         }
 
@@ -93,10 +92,10 @@ namespace LibShare.Api.Controllers
         /// <response code="400">Bad request. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
         [HttpPost("refreshtoken")]
-        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenRequestApiModel model)
+        public async Task<IActionResult> RefreshToken([FromBody] TokenApiModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +105,7 @@ namespace LibShare.Api.Controllers
                 });
             }
 
-            var resultRefreshToken = await _userService.RefreshToken(model);
+            var resultRefreshToken = await _accountService.RefreshTokenAsync(model);
             return Ok(resultRefreshToken);
         }
 
@@ -134,7 +133,7 @@ namespace LibShare.Api.Controllers
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
 
-            var result = await _userService.RestorePasswordSendLinkOnEmail(model.Email, Request);
+            var result = await _accountService.RestorePasswordSendLinkOnEmailAsync(model.Email, Request);
             return Ok(result);
         }
 
@@ -146,7 +145,7 @@ namespace LibShare.Api.Controllers
         /// <response code="400">Password haven't been restored.</response>
         /// <response code="409">Conflict. User is deleted. Returns message with error.</response>
         /// <response code="500">Internal server error.</response>
-        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
@@ -160,8 +159,8 @@ namespace LibShare.Api.Controllers
             {
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
-            
-            var result = await _userService.RestorePasswordBase(model);
+
+            var result = await _accountService.RestorePasswordBaseAsync(model);
             return Ok(result);
         }
 
@@ -173,7 +172,7 @@ namespace LibShare.Api.Controllers
         /// <response code="400">Password haven't been updated.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
         /// <response code="500">Internal server error.</response>
-        [ProducesResponseType(typeof(TokenResponseApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("change-password")]
@@ -189,7 +188,7 @@ namespace LibShare.Api.Controllers
             }
 
             var userId = User.FindFirst("id")?.Value;
-            var result = await _userService.ChangeUserPassword(model, userId);
+            var result = await _accountService.ChangeUserPasswordAsync(model, userId);
             return Ok(result);
         }
     }

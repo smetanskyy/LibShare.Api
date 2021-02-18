@@ -1,4 +1,6 @@
-﻿using LibShare.Api.Data.Constants;
+﻿using AutoMapper;
+using LibShare.Api.Data.Constants;
+using LibShare.Api.Data.DTO;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces.IRepositories;
 using Microsoft.AspNetCore.Identity;
@@ -15,12 +17,13 @@ namespace LibShare.Api.Data.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<DbUser> _userManager;
+
         public UserRepository(ApplicationDbContext context, UserManager<DbUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
-        public async Task<IdentityResult> Create(DbUser item, string password)
+        public async Task<IdentityResult> CreateAsync(DbUser item, string password)
         {
             if (item == null) return null;
             try
@@ -41,7 +44,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> Delete(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
             DbUser user = _context.Users.Find(id);
             try
@@ -56,12 +59,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
-        public async Task<IEnumerable<DbUser>> Find(Expression<Func<DbUser, bool>> predicate)
+        public async Task<IEnumerable<DbUser>> FindAsync(Expression<Func<DbUser, bool>> predicate)
         {
             try
             {
@@ -74,7 +72,7 @@ namespace LibShare.Api.Data.Repositories
 
         }
 
-        public async Task<DbUser> GetByEmail(string email)
+        public async Task<DbUser> GetByEmailAsync(string email)
         {
             try
             {
@@ -87,7 +85,7 @@ namespace LibShare.Api.Data.Repositories
 
         }
 
-        public async Task<IEnumerable<DbUser>> GetAll()
+        public async Task<IEnumerable<DbUser>> GetAllAsync()
         {
             try
             {
@@ -99,7 +97,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<DbUser> GetById(string id)
+        public async Task<DbUser> GetByIdAsync(string id)
         {
             try
             {
@@ -111,7 +109,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> Update(DbUser item)
+        public async Task<bool> UpdateAsync(DbUser item)
         {
             try
             {
@@ -125,7 +123,7 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> UpdateUserToken(DbUser user, string refreshToken)
+        public async Task<bool> UpdateUserTokenAsync(DbUser user, string refreshToken)
         {
             if (user == null) return false;
 
@@ -149,6 +147,11 @@ namespace LibShare.Api.Data.Repositories
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LibShare.Api.Data.ViewModels
+namespace LibShare.Api.Data.ApiModels
 {
     public class UserIdVM
     {
@@ -10,14 +9,13 @@ namespace LibShare.Api.Data.ViewModels
         public string Id { get; set; }
     }
 
-    public class UserVM
+    public class UserApiModel
     {
+        public string Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Address { get; set; }
-        public List<string> Roles { get; set; }
         public string Photo { get; set; }
         public string Phone { get; set; }
         public DateTime? DateOfBirth { get; set; }

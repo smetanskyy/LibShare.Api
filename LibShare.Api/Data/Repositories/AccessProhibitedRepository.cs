@@ -7,7 +7,7 @@ namespace LibShare.Api.Data.Repositories
 {
     public class AccessProhibitedRepository : IAccessProhibitedRepository<AccessProhibited, string>
     {
-        public Task<AccessProhibited> GetById(string id)
+        public Task<AccessProhibited> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }

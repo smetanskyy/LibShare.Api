@@ -1,6 +1,11 @@
-﻿namespace LibShare.Api.Data.ApiModels.RequestApiModels
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace LibShare.Api.Data.ApiModels
 {
-    public class TokenRequestApiModel
+    public class TokenApiModel
     {
         /// <summary>
         /// Gets or sets the token.
