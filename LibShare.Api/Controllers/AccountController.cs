@@ -276,7 +276,7 @@ namespace LibShare.Api.Controllers
         /// <response code="400">Bad request. Returns message with error.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
         /// <response code="500">Internal server error.</response>
-        [HttpPost("logout")]
+        [HttpGet("logout")]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
