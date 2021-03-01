@@ -64,7 +64,7 @@ namespace LibShare.Api.Data.Services
             var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
             var refreshToken = _jwtService.CreateRefreshToken();
 
-            await _userRepository.UpdateUserTokenAsync(user, refreshToken);
+            await _userRepository.UpdateUserTokenAsync(user.Id, refreshToken);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
@@ -106,7 +106,7 @@ namespace LibShare.Api.Data.Services
             var newAccessToken = _jwtService.CreateToken(claims);
             var newRefreshToken = _jwtService.CreateRefreshToken();
 
-            await _userRepository.UpdateUserTokenAsync(user, newRefreshToken);
+            await _userRepository.UpdateUserTokenAsync(userId, newRefreshToken);
 
             return new TokenApiModel { Token = newAccessToken, RefreshToken = newRefreshToken };
         }
@@ -152,7 +152,7 @@ namespace LibShare.Api.Data.Services
             var token = _jwtService.CreateToken(_jwtService.SetClaims(dbUser));
             var refreshToken = _jwtService.CreateRefreshToken();
 
-            await _userRepository.UpdateUserTokenAsync(dbUser, refreshToken);
+            await _userRepository.UpdateUserTokenAsync(dbUser.Id, refreshToken);
             await _signInManager.SignInAsync(dbUser, isPersistent: false);
 
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
@@ -217,7 +217,7 @@ namespace LibShare.Api.Data.Services
             var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
             var refreshToken = _jwtService.CreateRefreshToken();
 
-            await _userRepository.UpdateUserTokenAsync(user, refreshToken);
+            await _userRepository.UpdateUserTokenAsync(user.Id, refreshToken);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
@@ -242,10 +242,93 @@ namespace LibShare.Api.Data.Services
             var token = _jwtService.CreateToken(_jwtService.SetClaims(user));
             var refreshToken = _jwtService.CreateRefreshToken();
 
-            await _userRepository.UpdateUserTokenAsync(user, refreshToken);
+            await _userRepository.UpdateUserTokenAsync(userId, refreshToken);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
+        }
+
+        public async Task<MessageApiModel> ConfirmMailSendLinkOnEmailAsync(string userEmail, HttpRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            if (user != null && user.IsDeleted == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
+            }
+
+            if (user.EmailConfirmed)
+            {
+                throw new ArgumentException(_resourceManager.GetString("EmailAlreadyConfirmed"));
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var serverUrl = $"{request.Scheme}://{request.Host}/";
+            var url = serverUrl + $"confirm?email={user.Email}&token={token}";
+
+            var topic = _resourceManager.GetString("ConfirmEmail");
+
+            var html = HtmlStrings.GetHtmlEmailForConfirmAccount(url);
+
+            await _emailService.SendAsync(userEmail, topic, html);
+
+            return new MessageApiModel { Message = _resourceManager.GetString("ConfirmInstruction") };
+        }
+
+        public async Task<MessageApiModel> ConfirmMailBaseAsync(ConfirmApiModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                throw new BadRequestException(_resourceManager.GetString("UserDoesNotExist"));
+            }
+
+            if (user != null && user.IsDeleted == true)
+            {
+                throw new UserIsDeletedException(_resourceManager.GetString("UserIsDeleted"));
+            }
+
+            if (user.EmailConfirmed)
+            {
+                throw new ArgumentException(_resourceManager.GetString("EmailAlreadyConfirmed"));
+            }
+
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, model.Token);
+
+            if (!confirmResult.Succeeded)
+            {
+                throw new BadRequestException(confirmResult.Errors.First().Description);
+            }
+
+            return new MessageApiModel { Message = _resourceManager.GetString("EmailConfirmSucceeded") };
+        }
+
+        public async Task<MessageApiModel> DeleteUserByIdAsync(string userId)
+        {
+            await _userRepository.DeleteAsync(userId, "client's decision");
+            await LogoutUserAsync(userId);
+            return new MessageApiModel { Message = _resourceManager.GetString("AccountDeleted") };
+        }
+
+        public async Task<MessageApiModel> LogoutUserAsync(string userId)
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+                await _userRepository.UpdateUserTokenAsync(userId, null);
+                return new MessageApiModel { Message = _resourceManager.GetString("LogoutUser") };
+            }
+            catch (Exception)
+            {
+                return new MessageApiModel { Message = _resourceManager.GetString("ErrorUnknown") };
+            }
         }
     }
 }

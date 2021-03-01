@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountDeleted" xml:space="preserve">
+    <value>Обліковий запис успішно видалено. Для відновлення зверніться до адміністратора сайта!</value>
+  </data>
   <data name="AccountExist" xml:space="preserve">
     <value>Електронна пошта вже використовувалась раніше. Якщо це ваша, авторизуйтесь або скористайтесь відновленням доступу!</value>
   </data>
@@ -126,8 +129,20 @@
   <data name="BadImageFormatException" xml:space="preserve">
     <value>Неправильний формат зображення!</value>
   </data>
+  <data name="ConfirmEmail" xml:space="preserve">
+    <value>Підтвердження електронної пошти!</value>
+  </data>
+  <data name="ConfirmInstruction" xml:space="preserve">
+    <value>Перейдіть за посиланням, відправленим на вказану електронну пошту для підтвердження!</value>
+  </data>
   <data name="DateOfBirthFormat" xml:space="preserve">
     <value>Введіть дату народження у валідній формі!</value>
+  </data>
+  <data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>Електронна пошта вже підтверджена!</value>
+  </data>
+  <data name="EmailConfirmSucceeded" xml:space="preserve">
+    <value>Електронна пошта успішно підтверджена!</value>
   </data>
   <data name="EmailExist" xml:space="preserve">
     <value>Електронна пошта вже існує!</value>
@@ -149,6 +164,9 @@
   </data>
   <data name="LoginOrPasswordInvalid" xml:space="preserve">
     <value>Логін або пароль неправильний!</value>
+  </data>
+  <data name="LogoutUser" xml:space="preserve">
+    <value>Ви успішно вийшли з облікового запису!</value>
   </data>
   <data name="PasswordLength" xml:space="preserve">
     <value>Пароль має містити мінімум 8 символів і максимум 20 (включно)!</value>

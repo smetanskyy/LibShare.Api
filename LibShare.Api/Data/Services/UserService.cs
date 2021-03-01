@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using LibShare.Api.Data.ApiModels;
-using LibShare.Api.Data.DTO;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
@@ -138,9 +137,10 @@ namespace LibShare.Api.Data.Services
             return result;
         }
 
-        public async Task<bool> DeleteUserByIdAsync(string id, string deletionReason)
+        public async Task<UserApiModel> DeleteUserByIdAsync(string id, string deletionReason)
         {
-            return await _userRepository.DeleteAsync(id, deletionReason);
+            var user = await _userRepository.DeleteAsync(id, deletionReason);
+            return _mapper.Map<UserApiModel>(user);
         }
 
         public Task<IEnumerable<UserApiModel>> FindUserAsync(Expression<Func<UserApiModel, bool>> predicate)

@@ -158,7 +158,7 @@
             return html;
         }
 
-        public static string GetHtmlEmailForRestoreAccount(string url)
+        public static string GetHtmlEmailForConfirmAccount(string url)
         {
             string html = $@"
         <!-- start body -->
@@ -201,7 +201,7 @@
         <table border=""0"" cellpadding=""0"" cellspacing=""0"" width=""100%"" style=""max-width: 600px;"">
           <tr>
             <td align=""left"" bgcolor=""#ffffff"" style=""padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;"">
-              <h1 style=""margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;"">Відновлення облікового запису</h1>
+              <h1 style=""margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;"">Підтвердження електронної пошти</h1>
             </td>
           </tr>
         </table>
@@ -227,7 +227,7 @@
           <!-- start copy -->
           <tr>
             <td align=""left"" bgcolor=""#ffffff"" style=""padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"">
-              <p style=""margin: 0;"">Натисніть кнопку нижче, для відновлення облікового запису клієнта.</p>
+              <p style=""margin: 0;"">Натисніть кнопку нижче, для підтвердження електронної пошти.</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -241,7 +241,7 @@
                     <table border=""0"" cellpadding=""0"" cellspacing=""0"">
                       <tr>
                         <td align=""center"" bgcolor=""#1a82e2"" style=""border-radius: 6px;"">
-                          <a href=""{url}"" target=""_blank"" style=""display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;"">Відновити обліковий запис</a>
+                          <a href=""{url}"" target=""_blank"" style=""display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;"">Підтвердити електронну пошту</a>
                         </td>
                       </tr>
                     </table>

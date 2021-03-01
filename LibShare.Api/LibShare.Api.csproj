@@ -46,4 +46,9 @@
     <PackageReference Include="System.Drawing.Common" Version="5.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="E-Books\" />
+    <Folder Include="Uploaded\" />
+  </ItemGroup>
+
 </Project>

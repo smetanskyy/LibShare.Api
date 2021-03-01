@@ -1,4 +1,5 @@
 ﻿using LibShare.Api.Data.ApiModels;
+using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.DTO;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -17,7 +18,7 @@ namespace LibShare.Api.Data.Interfaces
         Task<IEnumerable<T>> GetAllUsersAsync();
         Task<IEnumerable<T>> FindUserAsync(Expression<Func<T, bool>> predicate);
         Task<T> CreateUserAsync(UserApiModel model, string password);
-        Task<bool> DeleteUserByIdAsync(string id, string deletionReason);
+        Task<T> DeleteUserByIdAsync(string id, string deletionReason);
         Task<T> UpdateUserAsync(UserApiModel model);
     }
 }

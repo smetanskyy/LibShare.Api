@@ -1,7 +1,9 @@
 appsettings.json
 
-#ignore folder with logs
+#ignore folders
 Logs/
+E-Books/
+Uploaded/
 
 # Default ignored files
 /shelf/

@@ -163,6 +163,9 @@ namespace LibShare.Api
             string pathRoot = InitStaticFiles
                 .CreateFolderServer(env, this.Configuration,
                     new string[] { "ImagesPath" });
+            
+            InitStaticFiles.CreateFolderServer(env, this.Configuration,
+                    new string[] { "BooksPath" });
 
             app.UseStaticFiles(new StaticFileOptions()
             {

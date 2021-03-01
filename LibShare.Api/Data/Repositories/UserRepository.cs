@@ -42,20 +42,20 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> DeleteAsync(string id, string deletionReason)
+        public async Task<DbUser> DeleteAsync(string id, string deletionReason)
         {
-            DbUser user = _context.Users.Find(id);
+            DbUser user = await _userManager.FindByIdAsync(id);
             try
             {
                 user.IsDeleted = true;
                 var record = new AccessProhibited { DateDelete = DateTime.Now, Id = id, DeletionReason = deletionReason };
                 _context.AccessProhibited.Add(record);
                 await _context.SaveChangesAsync();
-                return true;
+                return user;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
         }
 
@@ -63,7 +63,7 @@ namespace LibShare.Api.Data.Repositories
         {
             try
             {
-                return await _context.Users.Where(predicate).ToListAsync();
+                return await _userManager.Users.Where(predicate).ToListAsync();
             }
             catch (Exception)
             {
@@ -100,7 +100,7 @@ namespace LibShare.Api.Data.Repositories
         {
             try
             {
-                return await _context.Users.Include(x => x.UserProfile).SingleAsync(u => u.Id == id);
+                return await _userManager.Users.Include(x => x.UserProfile).SingleAsync(u => u.Id == id);
             }
             catch (Exception)
             {
@@ -121,17 +121,17 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<bool> UpdateUserTokenAsync(DbUser user, string refreshToken)
+        public async Task<bool> UpdateUserTokenAsync(string userId, string refreshToken)
         {
-            if (user == null) return false;
+            if (userId == null) return false;
 
-            var tokendb = _context.Tokens.Find(user.Id);
+            var tokendb = _context.Tokens.Find(userId);
 
             if (tokendb == null)
             {
                 _context.Tokens.Add(new Token
                 {
-                    Id = user.Id,
+                    Id = userId,
                     RefreshToken = refreshToken,
                     RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
                 });
