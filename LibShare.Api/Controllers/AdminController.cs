@@ -1,8 +1,6 @@
 ﻿using LibShare.Api.Data.ApiModels;
 using LibShare.Api.Data.ApiModels.ResponseApiModels;
-using LibShare.Api.Data.Constants;
 using LibShare.Api.Data.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

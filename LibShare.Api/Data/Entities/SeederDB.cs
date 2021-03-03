@@ -86,7 +86,7 @@ namespace LibShare.Api.Data.Entities
         }
         #endregion
 
-        #region Categories
+        #region Seed Categories
         public static void SeedCategories(ApplicationDbContext context)
         {
             var categories = new List<Category>();
@@ -1055,6 +1055,7 @@ namespace LibShare.Api.Data.Entities
         }
         #endregion
 
+        #region Seed Books
         public static void SeedBooks(UserManager<DbUser> userManager, ApplicationDbContext context)
         {
             var book = new Book
@@ -1073,6 +1074,7 @@ namespace LibShare.Api.Data.Entities
                 Year = ""
             };
         }
+        #endregion
 
         public static void SeedDataByAS(IServiceProvider services)
         {

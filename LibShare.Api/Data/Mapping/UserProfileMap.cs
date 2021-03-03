@@ -2,10 +2,6 @@
 using LibShare.Api.Data.ApiModels;
 using LibShare.Api.Data.DTO;
 using LibShare.Api.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Mapping
 {

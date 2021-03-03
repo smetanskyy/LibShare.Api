@@ -102,9 +102,11 @@ namespace LibShare.Api
                 .AddDefaultTokenProviders();
 
             #region Interfaces
-            services.AddTransient<ICrudRepository<DbUser, string>, UserRepository>();
+            services.AddTransient<ICrudUserRepository<DbUser, string>, UserRepository>();
+            services.AddTransient<ICrudRepository<Category, string>, CategoryRepository>();
             services.AddTransient<IAccountService<TokenApiModel>, AccountService>();
             services.AddTransient<IUserService<UserApiModel>, UserService>();
+            services.AddTransient<ILibraryService, LibraryService>();
             services.AddTransient<IRecaptchaService, RecaptchaService>();
             services.AddTransient<IEmailService, SendGridService>();
             #endregion
@@ -163,7 +165,7 @@ namespace LibShare.Api
             string pathRoot = InitStaticFiles
                 .CreateFolderServer(env, this.Configuration,
                     new string[] { "ImagesPath" });
-            
+
             InitStaticFiles.CreateFolderServer(env, this.Configuration,
                     new string[] { "BooksPath" });
 

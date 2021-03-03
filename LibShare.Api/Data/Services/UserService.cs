@@ -20,18 +20,16 @@ namespace LibShare.Api.Data.Services
 {
     public class UserService : IUserService<UserApiModel>
     {
-        private readonly ICrudRepository<DbUser, string> _userRepository;
+        private readonly ICrudUserRepository<DbUser, string> _userRepository;
         private readonly UserManager<DbUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
         private readonly ResourceManager _resourceManager;
 
-        public UserService(ICrudRepository<DbUser, string> userRepository,
+        public UserService(ICrudUserRepository<DbUser, string> userRepository,
             UserManager<DbUser> userManager,
             IMapper mapper,
-            IEmailService emailService,
             IWebHostEnvironment env,
             IConfiguration configuration,
             ResourceManager resourceManager)
@@ -39,7 +37,6 @@ namespace LibShare.Api.Data.Services
             _userRepository = userRepository;
             _userManager = userManager;
             _mapper = mapper;
-            _emailService = emailService;
             _env = env;
             _configuration = configuration;
             _resourceManager = resourceManager;
@@ -60,8 +57,8 @@ namespace LibShare.Api.Data.Services
             }
 
             var serverPath = _env.ContentRootPath; //Directory.GetCurrentDirectory(); //_env.WebRootPath;
-            var folerName = _configuration.GetValue<string>("ImagesPath");
-            var path = Path.Combine(serverPath, folerName);
+            var folderName = _configuration.GetValue<string>("ImagesPath");
+            var path = Path.Combine(serverPath, folderName);
 
             if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }
 

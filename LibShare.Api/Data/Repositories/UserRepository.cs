@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Repositories
 {
-    public class UserRepository : ICrudRepository<DbUser, string>
+    public class UserRepository : ICrudUserRepository<DbUser, string>
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<DbUser> _userManager;
@@ -69,7 +69,6 @@ namespace LibShare.Api.Data.Repositories
             {
                 return null;
             }
-
         }
 
         public async Task<DbUser> GetByEmailAsync(string email)
