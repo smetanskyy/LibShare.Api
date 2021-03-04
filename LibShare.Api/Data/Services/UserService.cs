@@ -20,14 +20,14 @@ namespace LibShare.Api.Data.Services
 {
     public class UserService : IUserService<UserApiModel>
     {
-        private readonly ICrudUserRepository<DbUser, string> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly UserManager<DbUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
         private readonly ResourceManager _resourceManager;
 
-        public UserService(ICrudUserRepository<DbUser, string> userRepository,
+        public UserService(IUserRepository userRepository,
             UserManager<DbUser> userManager,
             IMapper mapper,
             IWebHostEnvironment env,

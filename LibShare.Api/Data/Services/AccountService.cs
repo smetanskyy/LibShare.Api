@@ -18,14 +18,14 @@ namespace LibShare.Api.Data.Services
 {
     public class AccountService : IAccountService<TokenApiModel>
     {
-        private readonly ICrudUserRepository<DbUser, string> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly UserManager<DbUser> _userManager;
         private readonly SignInManager<DbUser> _signInManager;
         private readonly IJwtService _jwtService;
         private readonly ResourceManager _resourceManager;
         private readonly IEmailService _emailService;
 
-        public AccountService(ICrudUserRepository<DbUser, string> userRepository,
+        public AccountService(IUserRepository userRepository,
             UserManager<DbUser> userManager,
             SignInManager<DbUser> signInManager,
             IJwtService jwtService,

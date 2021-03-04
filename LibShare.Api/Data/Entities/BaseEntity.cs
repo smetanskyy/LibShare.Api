@@ -7,7 +7,7 @@ namespace LibShare.Api.Data.Entities
     {
         public DateTime DateCreate { get; set; }
         public DateTime? DateModify { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime? DateDelete { get; set; }
         public string DeletionReason { get; set; }
     }
@@ -18,7 +18,7 @@ namespace LibShare.Api.Data.Entities
         public virtual T Id { get; set; }
         public virtual DateTime DateCreate { get; set; }
         public virtual DateTime? DateModify { get; set; }
-        public virtual bool IsDelete { get; set; }
+        public virtual bool IsDeleted { get; set; }
         public virtual DateTime? DateDelete { get; set; }
         public virtual string DeletionReason { get; set; }
 
@@ -26,7 +26,7 @@ namespace LibShare.Api.Data.Entities
         {
             DateCreate = DateTime.Now;
             DateModify = null;
-            IsDelete = false;
+            IsDeleted = false;
             DateDelete = null;
             DeletionReason = null;
         }

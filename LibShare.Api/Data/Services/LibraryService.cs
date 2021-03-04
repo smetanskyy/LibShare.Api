@@ -10,10 +10,10 @@ namespace LibShare.Api.Data.Services
 {
     public class LibraryService : ILibraryService
     {
-        private readonly ICrudRepository<Category, string> _categoryRepo;
+        private readonly ICategoryRepository _categoryRepo;
         private readonly IMapper _mapper;
 
-        public LibraryService(ICrudRepository<Category, string> categoryRepo, IMapper mapper)
+        public LibraryService(ICategoryRepository categoryRepo, IMapper mapper)
         {
             _categoryRepo = categoryRepo;
             _mapper = mapper;

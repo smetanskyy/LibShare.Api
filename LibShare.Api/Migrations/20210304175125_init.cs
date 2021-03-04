@@ -58,7 +58,7 @@ namespace LibShare.Api.Migrations
                     ParentId = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     DeletionReason = table.Column<string>(type: "text", nullable: true)
                 },
@@ -258,7 +258,7 @@ namespace LibShare.Api.Migrations
                     UserId = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    IsDelete = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     DeletionReason = table.Column<string>(type: "text", nullable: true)
                 },

@@ -102,8 +102,9 @@ namespace LibShare.Api
                 .AddDefaultTokenProviders();
 
             #region Interfaces
-            services.AddTransient<ICrudUserRepository<DbUser, string>, UserRepository>();
-            services.AddTransient<ICrudRepository<Category, string>, CategoryRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IAccountService<TokenApiModel>, AccountService>();
             services.AddTransient<IUserService<UserApiModel>, UserService>();
             services.AddTransient<ILibraryService, LibraryService>();

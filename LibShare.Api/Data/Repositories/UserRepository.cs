@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Repositories
 {
-    public class UserRepository : ICrudUserRepository<DbUser, string>
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<DbUser> _userManager;
@@ -166,6 +166,27 @@ namespace LibShare.Api.Data.Repositories
             _context.UserProfile.Update(userProfile);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<DbUser> CreateAsync(DbUser item)
+        {
+            if (item == null) return null;
+            try
+            {
+                var userRoleName = Roles.User;
+                var result = await _userManager.CreateAsync(item);
+
+                if (result.Succeeded)
+                {
+                    result = await _userManager.AddToRoleAsync(item, userRoleName);
+                }
+
+                return item;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

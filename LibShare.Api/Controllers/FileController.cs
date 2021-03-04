@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -11,6 +11,7 @@ namespace LibShare.Api.Controllers
 {
     [Route("api/file")]
     [ApiController]
+    [Authorize]
     public class FileController : ControllerBase
     {
         private readonly IConfiguration _configuration;

@@ -2,11 +2,6 @@
 
 namespace LibShare.Api.Data.ApiModels
 {
-    public class UserIdVM
-    {
-        public string Id { get; set; }
-    }
-
     public class UserApiModel
     {
         /// <summary>
