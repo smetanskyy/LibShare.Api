@@ -162,17 +162,23 @@ namespace LibShare.Api
             }
 
             #region  InitStaticFiles Images
-            string pathRoot = InitStaticFiles
+            string pathRootForPhotos = InitStaticFiles
                 .CreateFolderServer(env, this.Configuration,
                     new string[] { "ImagesPath" });
 
-            InitStaticFiles.CreateFolderServer(env, this.Configuration,
+            string pathRootForBooks = InitStaticFiles.CreateFolderServer(env, this.Configuration,
                     new string[] { "BooksPath" });
 
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(pathRoot),
+                FileProvider = new PhysicalFileProvider(pathRootForPhotos),
                 RequestPath = new PathString('/' + Configuration.GetValue<string>("UrlImages"))
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(pathRootForBooks),
+                RequestPath = new PathString('/' + Configuration.GetValue<string>("UrlBooks"))
             });
             #endregion
 

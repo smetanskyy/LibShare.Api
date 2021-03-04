@@ -1058,21 +1058,285 @@ namespace LibShare.Api.Data.Entities
         #region Seed Books
         public static void SeedBooks(UserManager<DbUser> userManager, ApplicationDbContext context)
         {
-            var book = new Book
+            var books = new List<Book>();
+            books.Add(new Book
             {
-                Title = "",
-                Author = "",
-                CategoryId = null,
+                Id = "book1",
+                Title = "Barron's IELTS 4th edition",
+                Author = "Dr. Lin Loughleed",
+                CategoryId = "81",
                 DateCreate = DateTime.Now,
                 UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
-                Description = "",
-                Image = "",
+                Description = "The IELTS test is used as a measure of English language proficiency by over 7,000 " +
+                "educational institutions, government departments and agencies, and professional organizations in 135 countries. " +
+                "This updated manual for ESL students covers all parts of the IELTS and all of its question types: multiple-choice, " +
+                "short answer, sentence completion, flowchart completion, graphs, tables, note taking, summarizing, labeling diagrams " +
+                "and maps, classification, matching, and selecting from a list. Students will find: Four practice Academic tests " +
+                "reflective of the most recent exams. Two practice General Training tests An MP3 CD containing audio for all tests" +
+                " and activities. Explanatory answers for all test questions",
+                Image = "Barron's IELTS 4th edition 2016.jpg",
                 IsEbook = true,
-                File = "",
-                Language = "",
-                Publisher = "",
-                Year = ""
-            };
+                File = "Barron's IELTS 4th edition 2016.pdf",
+                Language = "English",
+                Publisher = "Barron's Educational Series, Inc.",
+                Year = "2016"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book2",
+                Title = "Липпман, Лажойе, Му - Язык программирования С++. Базовый курс, 5-е изд. - 2014",
+                Author = "Липпман Стенли Б., Лажойе Жози, Му Барбара Э.",
+                CategoryId = "500",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Книга \"Язык программирования C++.Базовый курс\" — новое издание популярного и исчерпывающего " +
+                "бестселлера по языку программирования C++, которое было полностью пересмотрено и обновлено под стандарт C++11. " +
+                "Оно поможет вам быстро изучить язык и использовать его весьма эффективными и передовыми способами. " +
+                "С самого начала книги Книга «Язык программирования C++.Базовый курс» читатель знакомится со стандартной " +
+                "библиотекой C++, ее самыми популярными функциями и средствами, что позволяет сразу же приступить к написанию" +
+                " полезных программ, еще не овладев всеми нюансами языка.Большинство примеров из книги было пересмотрено так, " +
+                "чтобы использовать новые средства языка и продемонстрировать их наилучшие способы применения.Книга Книга «Язык " +
+                "программирования C++.Базовый курс» — не только проверенное руководство для новичков в C++, " +
+                "она содержит также авторитетное обсуждение базовых концепций и методик языка C++ и является ценным ресурсом для опытных программистов, " +
+                "особенно желающих побыстрей узнать об усовершенствованиях C++11. Узнайте, как использовать новые средства языка С++11 " +
+                "и стандартной библиотеки для быстрого создания надежных программ, а также ознакомьтесь с высокоуровневым " +
+                "программированием; Учитесь на примерах, в которых показаны передовые стили программирования и методики " +
+                "проектирования; Изучите принципы и узнайте почему язык С++11 работает именно так; Воспользуйтесь множеством " +
+                "перекрестных ссылок, способных помочь вам объединить взаимосвязанные концепции и проникнуть в суть; Ознакомьтесь " +
+                "с современными методиками обучения и извлеките пользу из упражнений, в которых подчеркиваются ключевые моменты, позволяющие избежать проблем; " +
+                "Освойте лучшие методики программирования и закрепите на практике изученный материал.",
+                Image = "Липпман, Лажойе, Му - Язык программирования С++. Базовый курс, 5-е изд. - 2014.jpg",
+                IsEbook = true,
+                File = "Липпман, Лажойе, Му - Язык программирования С++. Базовый курс, 5-е изд. - 2014.pdf",
+                Language = "Пер. с англ. и ред. В.А. Коваленко.",
+                Publisher = "Издательский дом \"Вильяме\"",
+                Year = "2014"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book3",
+                Title = "Страуструп - Программирование. Принципы и практика с использованием C++, 2-е изд. - 2016",
+                Author = "Бьярне Страуструп",
+                CategoryId = "500",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Эта книга — курс программирования, написанный автором языка С++ Бьярном Страуструпом. Книга " +
+                "\"Программирование: принципы и практика с использованием C++, второе издание\" не просто учебник по языку C++, " +
+                "это учебник по программированию.Несмотря на то что ее автор — автор языка С++, " +
+                "книга посвящена не только этому языку программирования(при этом книга представляет собой прекрасное введение в язык С++); язык C++играет в книге сугубо иллюстративную роль.Автор задумал данную книгу как вводный курс по программированию.Поскольку теория без практики совершенно бессмысленна, " +
+                "такой учебник должен изобиловать примерами программных решений, и неудивительно, что автор языка C++использовал в книге свое детище. " +
+                "В книге в первую очередь описан широкий круг понятий и приемов программирования, необходимых для того, чтобы стать профессиональным " +
+                "программистом, и в гораздо меньшей степени — возможности языка программирования C++. " +
+                "Книга предназначена в основном для людей, никогда ранее не программировавших.Она опробована более чем тысячей студентов университета. " +
+                "Однако опытные программисты и студенты, уже изучившие основы программирования, также найдут в книге много полезной информации, " +
+                "которая позволит им перейти на более высокий уровень мастерства.",
+                Image = "Страуструп - Программирование. Принципы и практика с использованием C++, 2-е изд. - 2016.jpg",
+                IsEbook = true,
+                File = "Страуструп - Программирование. Принципы и практика с использованием C++, 2-е изд. - 2016.pdf",
+                Language = "Русский язык",
+                Publisher = "Издательский дом \"Вильяме\"",
+                Year = "2016"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book4",
+                Title = "Richter, Bospoort - Windows Runtime via C# - 2013",
+                Author = "Richter, Bospoort",
+                CategoryId = "501",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Delve inside the Windows Runtime - and learn best ways to design and build Windows Store apps. Guided by Jeffrey Richter, " +
+                "a recognized expert in Windows and .NET programming, along with principal Windows consultant Maarten van de Bospoort, you'll master essential " +
+                "concepts. And you'll gain practical insights and tips for how to architect, design, optimize, and debug your apps.",
+                Image = "Richter, Bospoort - Windows Runtime via C# - 2013.jpg",
+                IsEbook = true,
+                File = "Richter, Bospoort - Windows Runtime via C# - 2013.pdf",
+                Language = "English",
+                Publisher = "Microsoft Press",
+                Year = "2013"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book5",
+                Title = "Troelsen, Japikse - Pro C# 7. With .NET and .NET Core, 8th ed. - 2017",
+                Author = "Troelsen, Japikse",
+                CategoryId = "501",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "This essential classic title provides a comprehensive foundation in the C# programming language and the frameworks it lives in. Now in its 8th " +
+                "edition, you’ll find all the very latest C# 7.1 and .NET 4.7 features here, along with four brand new chapters on Microsoft’s " +
+                "lightweight, cross-platform framework, .NET Core, up to and including .NET Core 2.0. Coverage of ASP.NET Core, Entity Framework (EF) " +
+                "Core, and more, sits alongside the latest updates to .NET, including Windows Presentation Foundation (WPF), Windows Communication " +
+                "Foundation (WCF), and ASP.NET MVC.",
+                Image = "Troelsen, Japikse - Pro C# 7. With .NET and .NET Core, 8th ed. - 2017.jpg",
+                IsEbook = true,
+                File = "Troelsen, Japikse - Pro C# 7. With .NET and .NET Core, 8th ed. - 2017.pdf",
+                Language = "English",
+                Publisher = "apress",
+                Year = "2017"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book6",
+                Title = "Рихтер - CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C#, 4-е изд. - 2013",
+                Author = "Рихтер",
+                CategoryId = "501",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Эта книга, выходящая в четвертом издании и уже ставшая классическим учебником по программированию, подробно " +
+                "описывает внутреннее устройство и функционирование общеязыковой исполняющей среды (CLR) Microsoft .NET Framework версии 4.5. " +
+                "Написанная признанным экспертом в области программирования Джеффри Рихтером, много лет являющимся консультантом команды " +
+                "разработчиков .NET Framework компании Microsoft, книга научит вас создавать по-настоящему надежные приложения любого вида, " +
+                "в том числе с использованием Microsoft Silverlight, ASP.NET, Windows Presentation Foundation и т.д. Четвертое издание полностью " +
+                "обновлено в соответствии со спецификацией платформы.NET Framework 4.5, а также среды Visual Studio 2012 и C# 5.0.",
+                Image = "Рихтер - CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C#, 4-е изд. - 2013.jpg",
+                IsEbook = true,
+                File = "Рихтер - CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C#, 4-е изд. - 2013.pdf",
+                Language = "Русский язык",
+                Publisher = "Питер",
+                Year = "2013"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book7",
+                Title = "Троелсен, Джепикс - Язык программирования C# 7 и платформы .NET и .NET Core - 2018",
+                Author = "Троелсен, Джепикс",
+                CategoryId = "501",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Эта классическая книга представляет собой всеобъемлющий источник сведений о языке программирования C# и о связанной " +
+                "с ним инфраструктуре. В 8-м издании книги вы найдете описание функциональных возможностей самых последних версий C# 7.0 и 7.1 и .NET 4.7, " +
+                "а также совершенно новые главы о легковесной межплатформенной инфраструктуре Microsoft .NET Core, включая версию .NET Core 2.0. Книга " +
+                "охватывает ASP.NET Core, Entity Framework (EF) Core и т.д. наряду с последними обновлениями платформы .NET, в том числе внесенными в " +
+                "Windows Presentation Foundation (WPF), Windows Communication Foundation (WCF) и ASP.NET MVC.",
+                Image = "Троелсен, Джепикс - Язык программирования C# 7 и платформы .NET и .NET Core - 2018.jpg",
+                IsEbook = true,
+                File = "Троелсен, Джепикс - Язык программирования C# 7 и платформы .NET и .NET Core - 2018.pdf",
+                Language = "Русский язык",
+                Publisher = "Компьютерное издательство \"Диалектика\"",
+                Year = "2018"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book8",
+                Title = "Richter - Applied Microsoft .NET Framework Programming - 2002",
+                Author = "Richter",
+                CategoryId = "501",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "The Microsoft® .NET Framework allows developers to quickly build robust, secure ASP.NET Web Forms and XML Web service applications, " +
+                "Windows® Forms applications, tools, and types. Find out all about its common language runtime and learn how to leverage its power to build, package, " +
+                "and deploy any kind of application or component. APPLIED MICROSOFT .NET FRAMEWORK PROGRAMMING is ideal for anyone who understands object-oriented " +
+                "programming concepts such as data abstraction, inheritance, and polymorphism. The book carefully explains the extensible type system of the .NET " +
+                "Framework, examines how the runtime manages the behavior of types, and explores how an application manipulates types. While focusing on C#, it " +
+                "presents concepts applicable to all programming languages that target the .NET Framework.",
+                Image = "Richter - Applied Microsoft .NET Framework Programming - 2002.jpg",
+                IsEbook = true,
+                File = "Richter - Applied Microsoft .NET Framework Programming - 2002.pdf",
+                Language = "English",
+                Publisher = "Wintellect",
+                Year = "2002"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book9",
+                Title = "Burd - Beginning Programming with Java For Dummies, 4th ed. - 2014",
+                Author = "Burd",
+                CategoryId = "502",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Beginning Programming with Java For Dummies, 4 Edition is a comprehensive guide to " +
+                "learning one of the most popular programming languages worldwide. This book covers basic development " +
+                "concepts and techniques through a Java lens. You'll learn what goes into a program, how to put the " +
+                "pieces together, how to deal with challenges, and how to make it work. The new Fourth Edition " +
+                "has been updated to align with Java 8, and includes new options for the latest tools and techniques. " +
+                "Java is the predominant language used to program Android and cloud apps, and its popularity is surging " +
+                "as app demand rises.Whether you're just tooling around, or embarking on a career, Beginning Programming " +
+                "with Java For Dummies, 4 Edition is a great place to start. Step-by-step instruction, easy-to-read language, " +
+                "and quick navigation make this book the perfect resource for new programmers. You'll begin with the basics " +
+                "before moving into code, with simple, yet detailed explanations every step of the way.",
+                Image = "Burd - Beginning Programming with Java For Dummies, 4th ed. - 2014.jpg",
+                IsEbook = true,
+                File = "Burd - Beginning Programming with Java For Dummies, 4th ed. - 2014.pdf",
+                Language = "English",
+                Publisher = "John Wiley & Sons, Inc",
+                Year = "2014"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book10",
+                Title = "Cosmina - Java for Absolute Beginners - 2018",
+                Author = "Cosmina",
+                CategoryId = "502",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Write your first code in Java using simple, step-by-step examples that model real-word objects and " +
+                "events, making learning easy. With this book you’ll be able to pick up the concepts without fuss. Java for Absolute " +
+                "Beginners teaches Java development in language anyone can understand, giving you the best possible start. You’ll see " +
+                "clear code descriptions and layout so that you can get your code running as soon as possible. After reading this book, " +
+                "you'll come away with the basics to get started writing programs in Java.",
+                Image = "Cosmina - Java for Absolute Beginners - 2018.jpg",
+                IsEbook = true,
+                File = "Cosmina - Java for Absolute Beginners - 2018.pdf",
+                Language = "English",
+                Publisher = "apress",
+                Year = "2018"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book11",
+                Title = "Вязовик - Программирование на Java - 2016",
+                Author = "Вязовик",
+                CategoryId = "502",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Курс лекций посвящен современному и мощному языку программирования Java. В его " +
+                "рамках дается вводное изложение принципов ООП, необходимое для разработки на Java, основы языка, " +
+                "библиотеки для работы с файлами, сетью, для построения оконного интерфейса пользователя (GUI) и др. " +
+                "Java изначально появилась на свет как язык для создания небольших приложений для Интернета(апплетов), " +
+                "но со временем развилась как универсальная платформа для создания программного обеспечения, " +
+                "которое работает буквально везде – от мобильных устройств и смарт - карт до мощных серверов.",
+                Image = "Вязовик - Программирование на Java - 2016.jpg",
+                IsEbook = true,
+                File = "Вязовик - Программирование на Java - 2016.pdf",
+                Language = "Русский язык",
+                Publisher = "ИНТУИТ",
+                Year = "2016"
+            });
+
+            books.Add(new Book
+            {
+                Id = "book12",
+                Title = "The Callan ® Method - 2013",
+                Author = "Robin Callan, Duncan McLeay",
+                CategoryId = "81",
+                DateCreate = DateTime.Now,
+                UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                Description = "Learning English with the Callan™ Method is fast and effective! " +
+                "The Callan Method is a teaching method created specifically to improve your English " +
+                "in an intensive atmosphere.The teacher is constantly asking questions, so you are hearing and using the " +
+                "language as much as possible.When you speak in the lesson, the teacher corrects your grammar and " +
+                "pronunciation mistakes, and you learn a lot from this correction.",
+                Image = "Callan Method 12 - 2013.jpg",
+                IsEbook = true,
+                File = "Callan Method 12 - 2013.pdf",
+                Language = "English",
+                Publisher = "Callan Method Organisation Limited",
+                Year = "2013"
+            });
+
+            context.Books.AddRange(books);
+            context.SaveChanges();
         }
         #endregion
 
@@ -1098,6 +1362,12 @@ namespace LibShare.Api.Data.Entities
                 {
                     Console.WriteLine("Adding categories - seeding ... ");
                     SeedCategories(context);
+                }
+
+                if (!context.Books.Any())
+                {
+                    Console.WriteLine("Adding books - seeding ... ");
+                    SeedBooks(manager, context);
                 }
 
                 Console.WriteLine("Database seeded.");
