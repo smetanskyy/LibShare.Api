@@ -7,7 +7,7 @@ namespace LibShare.Api.Data.Interfaces
 {
     public interface ILibraryService
     {
-        Task<IEnumerable<CategoryApiModel>> GetCategoriesAsync();
+        IEnumerable<CategoryApiModel> GetCategories();
         Task<BookApiModel> CreateBookAsync(BookApiModel book);
         Task<BookApiModel> GetBookByIdAsync(string bookId);
         Task<bool> UpdateBookAsync(BookApiModel book);

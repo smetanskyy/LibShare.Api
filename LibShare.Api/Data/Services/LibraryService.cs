@@ -82,9 +82,9 @@ namespace LibShare.Api.Data.Services
             return _mapper.Map<BookApiModel>(book);
         }
 
-        public async Task<IEnumerable<CategoryApiModel>> GetCategoriesAsync()
+        public IEnumerable<CategoryApiModel> GetCategories()
         {
-            var categories = await _categoryRepo.GetAllAsync();
+            var categories = _categoryRepo.GetAll();
             return _mapper.Map<IEnumerable<CategoryApiModel>>(categories);
         }
 

@@ -19,6 +19,6 @@ namespace LibShare.Api.Data.ApiModels.ResponseApiModels
         /// </summary>
         public string Image { get; set; }
 
-        public virtual string ParentId { get; set; }
+        public virtual ICollection<CategoryApiModel> Children { get; set; }
     }
 }

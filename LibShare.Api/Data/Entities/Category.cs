@@ -24,5 +24,6 @@ namespace LibShare.Api.Data.Entities
         [ForeignKey("Parent")]
         public virtual string ParentId { get; set; }
         public virtual Category Parent { get; set; }
+        public virtual ICollection<Category> Children { get; set; }
     }
 }

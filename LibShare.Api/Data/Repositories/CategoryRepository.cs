@@ -64,6 +64,11 @@ namespace LibShare.Api.Data.Repositories
             return await _context.Categories.ToListAsync();
         }
 
+        public IEnumerable<Category> GetAll()
+        {
+            return _context.Categories.Include(c => c.Children).AsEnumerable().Where(x => x.Parent == null).ToList();
+        }
+
         public async Task<Category> GetByIdAsync(string id)
         {
             return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);

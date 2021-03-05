@@ -31,9 +31,9 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<CategoryApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("all-categories")]
-        public async Task<IActionResult> GetAllCategories()
+        public IActionResult GetAllCategories()
         {
-            var result = await _libraryService.GetCategoriesAsync();
+            var result = _libraryService.GetCategories();
             return Ok(result);
         }
 

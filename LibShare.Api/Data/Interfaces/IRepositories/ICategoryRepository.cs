@@ -8,5 +8,6 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
 {
     public interface ICategoryRepository : ICrudRepository<Category, string> 
     {
+        IEnumerable<Category> GetAll();
     }
 }
