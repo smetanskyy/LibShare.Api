@@ -47,11 +47,37 @@ namespace LibShare.Api.Data.Repositories
             _context.Dispose();
         }
 
+        public IEnumerable<Book> FilterByCategory(string categoryId)
+        {
+            if (string.IsNullOrWhiteSpace(categoryId))
+                return _context.Books.AsQueryable();
+
+            var categoriesFilter = _context.Categories.Include(c => c.Books).AsQueryable();
+            var books = categoriesFilter.FirstOrDefault(c => c.Id == categoryId)?.Books.AsQueryable();
+            return books.Where(b => b.IsDeleted == false).AsQueryable();
+        }
+
+        public IEnumerable<Book> FilterByMultiCategory(string[] categories)
+        {
+            if (!categories.Any())
+                return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
+
+            var categoriesFilter = _context.Categories.Include(c => c.Books).AsQueryable();
+            var books = new List<Book>();
+
+            foreach (var id in categories)
+            {
+                books.AddRange(categoriesFilter.FirstOrDefault(c => c.Id == id)?.Books.ToList());
+            }
+            return books.Any() ? books.Where(b => b.IsDeleted == false) : null;
+        }
+
         public async Task<IEnumerable<Book>> FindAsync(Expression<Func<Book, bool>> predicate)
         {
             try
             {
-                return await _context.Books.Where(predicate).ToListAsync();
+                var books = _context.Books.Where(b => b.IsDeleted == false);
+                return await books.Where(predicate).ToListAsync();
             }
             catch (Exception)
             {
@@ -61,12 +87,72 @@ namespace LibShare.Api.Data.Repositories
 
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books.Where(b => b.IsDeleted == false).ToListAsync();
         }
 
         public async Task<Book> GetByIdAsync(string id)
         {
-            return await _context.Books.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.IsDeleted == false);
+        }
+
+        public IEnumerable<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1)
+        {
+            return books.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public IEnumerable<Book> Search(string searchString)
+        {
+            var books = _context.Books.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(b => b.Title.Contains(searchString)
+                                       || b.Author.Contains(searchString)
+                                       || b.Publisher.Contains(searchString)
+                                       || b.Year.Contains(searchString)
+                                       || b.Description.Contains(searchString)).AsQueryable();
+            }
+            return books;
+        }
+
+        public IEnumerable<Book> Sort(IEnumerable<Book> books, SortOrder sortOrder)
+        {
+            switch (sortOrder)
+            {
+                case SortOrder.Id:
+                    books = books.OrderBy(b => b.Id);
+                    break;
+                case SortOrder.Title:
+                    books = books.OrderBy(b => b.Title);
+                    break;
+                case SortOrder.Author:
+                    books = books.OrderBy(b => b.Author);
+                    break;
+                case SortOrder.Publisher:
+                    books = books.OrderBy(b => b.Publisher);
+                    break;
+                case SortOrder.Year:
+                    books = books.OrderByDescending(b => b.Year);
+                    break;
+                case SortOrder.Language:
+                    books = books.OrderBy(b => b.Language);
+                    break;
+                case SortOrder.Description:
+                    books = books.OrderBy(b => b.Description);
+                    break;
+                case SortOrder.Category:
+                    books = books.OrderBy(b => b.CategoryId);
+                    break;
+                case SortOrder.User:
+                    books = books.OrderBy(b => b.UserId);
+                    break;
+                case SortOrder.DateCreate:
+                    books = books.OrderByDescending(b => b.DateCreate);
+                    break;
+                default:
+                    break;
+            }
+            return books;
         }
 
         public async Task<bool> UpdateAsync(Book item)

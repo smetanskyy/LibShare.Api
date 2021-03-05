@@ -29,7 +29,7 @@ namespace LibShare.Api.Controllers
         /// <summary>
         /// Get information about authorized user.
         /// </summary>
-        /// <returns>Status code</returns>
+        /// <returns>Returns object with data</returns>
         /// <response code="200">if get information about current user is correct.</response>
         /// <response code="400">if get information about current user is incorrect.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
@@ -50,7 +50,7 @@ namespace LibShare.Api.Controllers
         /// <summary>
         /// Get authorized user's photo.
         /// </summary>
-        /// <returns>Status code</returns>
+        /// <returns>Returns object with data</returns>
         /// <response code="200">if request is correct.</response>
         /// <response code="400">if request is incorrect.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
@@ -71,7 +71,7 @@ namespace LibShare.Api.Controllers
         /// <summary>
         /// Sets authorized user photo. Size limit 100 MB. Format base64.
         /// </summary>
-        /// <returns>Status code</returns>
+        /// <returns>Returns object with data</returns>
         /// <response code="200">If set user photo request is correct.</response>
         /// <response code="400">If set user photo request is incorrect.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
@@ -101,7 +101,7 @@ namespace LibShare.Api.Controllers
         /// <summary>
         /// Sets user profile (information about authorized user).
         /// </summary>
-        /// <returns>Status code</returns>
+        /// <returns>Returns object with data</returns>
         /// <response code="200">If the user profile successfully updated.</response>
         /// <response code="400">If the request to set the user profile is incorrect.</response>
         /// <response code="401">If user is unauthorized or token is bad/expired.</response>
