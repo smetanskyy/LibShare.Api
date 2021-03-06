@@ -68,6 +68,7 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(BookApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("add-book")]
+        [Authorize]
         public async Task<IActionResult> AddBook([FromBody] BookApiModel model)
         {
             var result = await _libraryService.CreateBookAsync(model);
@@ -171,6 +172,7 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("book-update")]
+        [Authorize]
         public async Task<IActionResult> UpdateBook([FromBody] BookApiModel model)
         {
             var result = await _libraryService.UpdateBookAsync(model);
@@ -188,6 +190,7 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpPut("book-delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteBookById([FromQuery] string bookId)
         {
             var result = await _libraryService.DeleteBookAsync(bookId);

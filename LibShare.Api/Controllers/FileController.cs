@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LibShare.Api.Data.Interfaces.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -15,10 +16,12 @@ namespace LibShare.Api.Controllers
     public class FileController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly IBookRepository _bookRepo;
 
-        public FileController(IConfiguration configuration)
+        public FileController(IConfiguration configuration, IBookRepository bookRepo)
         {
             _configuration = configuration;
+            _bookRepo = bookRepo;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -48,10 +51,13 @@ namespace LibShare.Api.Controllers
 
         [HttpGet, DisableRequestSizeLimit]
         [Route("download")]
-        public async Task<IActionResult> Download([FromQuery] string filename)
+        public async Task<IActionResult> Download([FromQuery] string bookId)
         {
+            var book = await _bookRepo.GetByIdAsync(bookId);
+            if (book == null)
+                return NotFound();
             var folderName = _configuration.GetValue<string>("BooksPath");
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName, filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName, book.File);
             if (!System.IO.File.Exists(filePath))
                 return NotFound();
             var memory = new MemoryStream();
@@ -60,7 +66,7 @@ namespace LibShare.Api.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(filePath), filename);
+            return File(memory, GetContentType(filePath), book.File);
         }
 
         private string GetContentType(string path)

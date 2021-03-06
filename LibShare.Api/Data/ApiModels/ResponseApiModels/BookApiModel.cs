@@ -52,10 +52,7 @@ namespace LibShare.Api.Data.ApiModels.ResponseApiModels
         /// </summary>
         public bool IsEbook { get; set; }
 
-        /// <summary>
-        /// Name of file(book)
-        /// </summary>
-        public string File { get; set; }
+        // public string File { get; set; }
 
         /// <summary>
         /// Category id
