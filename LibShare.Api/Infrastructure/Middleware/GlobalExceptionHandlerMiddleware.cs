@@ -55,7 +55,7 @@ namespace LibShare.Api.Infrastructure.Middleware
                 var response = context.Response;
                 response.ContentType = "application/json; charset=utf-8";
 
-                var desctiption = new MessageApiModel(error.Message);
+                var desctiption = new MessageApiModel { Message = error.Message };
 
                 if (error is BadImageFormatException)
                     desctiption.Message = _resourceManager.GetString("BadImageFormatException");

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LibShare.Api.Data.ApiModels.RequestApiModels
+﻿namespace LibShare.Api.Data.ApiModels.RequestApiModels
 {
     public class ConfirmApiModel
     {
