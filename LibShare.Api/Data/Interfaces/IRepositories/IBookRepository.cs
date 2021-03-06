@@ -1,6 +1,6 @@
 ﻿using LibShare.Api.Data.Entities;
+using LibShare.Api.Helpers;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Interfaces.IRepositories
 {
@@ -11,19 +11,7 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
         List<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1);
         IEnumerable<Book> FilterByMultiCategory(string[] categories);
         IEnumerable<Book> FilterByCategory(string categoryId);
-    }
+        IEnumerable<Book> GetBooksByUserId(string userId);
 
-    public enum SortOrder
-    {
-        Id,
-        Title,
-        Author,
-        Publisher,
-        Year,
-        Language,
-        Description,
-        Category,
-        User,
-        DateCreate
     }
 }

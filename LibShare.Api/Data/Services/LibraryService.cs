@@ -3,6 +3,7 @@ using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
+using LibShare.Api.Helpers;
 using LibShare.Api.Infrastructure.Middleware;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,11 @@ namespace LibShare.Api.Data.Services
         private readonly IMapper _mapper;
         private readonly ResourceManager _resourceManager;
 
-        public LibraryService(ICategoryRepository categoryRepo, IBookRepository bookRepo, IMapper mapper, ResourceManager resourceManager)
+        public LibraryService(
+            ICategoryRepository categoryRepo,
+            IBookRepository bookRepo,
+            IMapper mapper,
+            ResourceManager resourceManager)
         {
             _categoryRepo = categoryRepo;
             _bookRepo = bookRepo;
@@ -42,42 +47,37 @@ namespace LibShare.Api.Data.Services
             return new MessageApiModel { Message = _resourceManager.GetString("BookDeleted") };
         }
 
-        public PagedListApiModel<BookApiModel> FilterByCategorySortPaginate(string categoryIdint, SortOrder sortOrder, int pageSize = 10, int page = 1)
+        private PagedListApiModel<BookApiModel> SortPaginate(IEnumerable<Book> list)
         {
-            var booksFromDB = _bookRepo.FilterByCategory(categoryIdint);
-            booksFromDB = _bookRepo.Sort(booksFromDB, sortOrder);
+            list = _bookRepo.Sort(list, BookParameters.SortOrder);
 
-            var booksAfterPaginate = _mapper.Map<List<BookApiModel>>(_bookRepo.Paginate(booksFromDB, pageSize, page).ToList());
+            var booksAfterPaginate = _mapper.Map<List<BookApiModel>>(
+                _bookRepo.Paginate(list, BookParameters.PageSize, BookParameters.PageNumber).ToList());
 
             PagedListApiModel<BookApiModel> books = new PagedListApiModel<BookApiModel>(
-                booksAfterPaginate, booksFromDB.Count(), page, pageSize);
+                booksAfterPaginate, list.Count(), BookParameters.PageSize, BookParameters.PageNumber);
 
             return books;
         }
 
-        public PagedListApiModel<BookApiModel> FilterByMultiCategorySortPaginate(string[] categories, SortOrder sortOrder, int pageSize = 10, int page = 1)
+        public PagedListApiModel<BookApiModel> FilterByCategorySortPaginate(string categoryId)
+        {
+            var booksFromDB = _bookRepo.FilterByCategory(categoryId);
+
+            return SortPaginate(booksFromDB);
+        }
+
+        public PagedListApiModel<BookApiModel> FilterByMultiCategorySortPaginate(string[] categories)
         {
             var booksFromDB = _bookRepo.FilterByMultiCategory(categories);
-            booksFromDB = _bookRepo.Sort(booksFromDB, sortOrder);
-            var booksAfterPaginate = _mapper.Map<List<BookApiModel>>(_bookRepo.Paginate(booksFromDB, pageSize, page));
 
-            PagedListApiModel<BookApiModel> books = new PagedListApiModel<BookApiModel>(
-                booksAfterPaginate, booksFromDB.Count(), page, pageSize);
-
-            return books;
+            return SortPaginate(booksFromDB);
         }
 
-        public PagedListApiModel<BookApiModel> GetAllBooks(SortOrder sortOrder, int pageSize = 10, int page = 1)
+        public PagedListApiModel<BookApiModel> GetAllBooksSortPaginate()
         {
             var booksFromDB = _bookRepo.GetAll();
-            booksFromDB = _bookRepo.Sort(booksFromDB, sortOrder);
-
-            var booksAfterPaginate = _mapper.Map<List<BookApiModel>>(_bookRepo.Paginate(booksFromDB, pageSize, page).ToList());
-
-            PagedListApiModel<BookApiModel> books = new PagedListApiModel<BookApiModel>(
-                booksAfterPaginate, booksFromDB.Count(), page, pageSize);
-
-            return books;
+            return SortPaginate(booksFromDB);
         }
 
         public async Task<BookApiModel> GetBookByIdAsync(string bookId)
@@ -88,29 +88,29 @@ namespace LibShare.Api.Data.Services
             return _mapper.Map<BookApiModel>(book);
         }
 
+        public PagedListApiModel<BookApiModel> GetBooksByUserIdSortPaginate(string userId)
+        {
+            var booksFromDB = _bookRepo.GetBooksByUserId(userId);
+            return SortPaginate(booksFromDB);
+        }
+
         public IEnumerable<CategoryApiModel> GetCategories()
         {
             var categories = _categoryRepo.GetAll();
             return _mapper.Map<IEnumerable<CategoryApiModel>>(categories);
         }
 
-        public PagedListApiModel<BookApiModel> SearchSortPaginate(string searchString, SortOrder sortOrder, int pageSize = 10, int page = 1)
+        public PagedListApiModel<BookApiModel> SearchSortPaginate(string searchString)
         {
             var booksFromDB = _bookRepo.Search(searchString);
-            booksFromDB = _bookRepo.Sort(booksFromDB, sortOrder);
-
-            var booksAfterPaginate = _mapper.Map<List<BookApiModel>>(_bookRepo.Paginate(booksFromDB, pageSize, page).ToList());
-
-            PagedListApiModel<BookApiModel> books = new PagedListApiModel<BookApiModel>(
-                booksAfterPaginate, booksFromDB.Count(), page, pageSize);
-
-            return books;
+            return SortPaginate(booksFromDB);
         }
 
-        public async Task<bool> UpdateBookAsync(BookApiModel book)
+        public async Task<BookApiModel> UpdateBookAsync(BookApiModel book)
         {
             await GetBookByIdAsync(book.Id);
-            return await _bookRepo.UpdateAsync(_mapper.Map<Book>(book));
+            await _bookRepo.UpdateAsync(_mapper.Map<Book>(book));
+            return await GetBookByIdAsync(book.Id);
         }
     }
 }

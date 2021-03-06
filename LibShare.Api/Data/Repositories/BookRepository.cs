@@ -1,5 +1,6 @@
 ﻿using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces.IRepositories;
+using LibShare.Api.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace LibShare.Api.Data.Repositories
         public IEnumerable<Book> FilterByCategory(string chosenCategoryId)
         {
             if (chosenCategoryId == null || string.IsNullOrWhiteSpace(chosenCategoryId))
-                return _context.Books.AsQueryable();
+                return GetAll();
 
             return FilterByMultiCategory(new[] { chosenCategoryId });
         }
@@ -62,22 +63,26 @@ namespace LibShare.Api.Data.Repositories
         public IEnumerable<Book> FilterByMultiCategory(string[] chosenCategories)
         {
             if (chosenCategories == null || !chosenCategories.Any())
-                return _context.Books.AsQueryable();
+                return GetAll();
 
             chosenCategories = _categoryRepo.GetAllSubCategoriesIdFromFilter(chosenCategories);
 
-            var books = _context.Books
-                .Where(b => b.IsDeleted == false)
-                .Where(c => chosenCategories.Contains(c.CategoryId)).AsQueryable();
+            var books = GetBooksWithoutDeleteItems();
 
-            return books;
+            if (BookParameters.OnlyEbooks == true)
+                books = books.Where(b => b.IsEbook == true).AsQueryable();
+            else if (BookParameters.OnlyRealBooks == true)
+                books = books.Where(b => b.IsEbook == false).AsQueryable();
+
+            return books
+                .Where(c => chosenCategories.Contains(c.CategoryId)).AsQueryable();
         }
 
         public async Task<IEnumerable<Book>> FindAsync(Expression<Func<Book, bool>> predicate)
         {
             try
             {
-                var books = _context.Books.Where(b => b.IsDeleted == false);
+                var books = GetBooksWithoutDeleteItems();
                 return await books.Where(predicate).ToListAsync();
             }
             catch (Exception)
@@ -88,7 +93,27 @@ namespace LibShare.Api.Data.Repositories
 
         public IEnumerable<Book> GetAll()
         {
-            return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
+            var books = GetBooksWithoutDeleteItems();
+
+            if (BookParameters.OnlyEbooks == true)
+                return books.Where(b => b.IsEbook == true).AsQueryable();
+            else if (BookParameters.OnlyRealBooks == true)
+                return books.Where(b => b.IsEbook == false).AsQueryable();
+            else
+                return books;
+        }
+
+        public IEnumerable<Book> GetBooksByUserId(string userId)
+        {
+            var books = GetBooksWithoutDeleteItems();
+            books = books.Where(b => b.UserId == userId).AsQueryable();
+
+            if (BookParameters.OnlyEbooks == true)
+                return books.Where(b => b.IsEbook == true).AsQueryable();
+            else if (BookParameters.OnlyRealBooks == true)
+                return books.Where(b => b.IsEbook == false).AsQueryable();
+            else
+                return books;
         }
 
         public async Task<Book> GetByIdAsync(string id)
@@ -103,7 +128,12 @@ namespace LibShare.Api.Data.Repositories
 
         public IEnumerable<Book> Search(string searchString)
         {
-            var books = _context.Books.AsQueryable();
+            var books = GetBooksWithoutDeleteItems();
+
+            if (BookParameters.OnlyEbooks == true)
+                books = books.Where(b => b.IsEbook == true).AsQueryable();
+            else if (BookParameters.OnlyRealBooks == true)
+                books = books.Where(b => b.IsEbook == false).AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -113,7 +143,7 @@ namespace LibShare.Api.Data.Repositories
                                        || b.Year.Contains(searchString)
                                        || b.Description.Contains(searchString)).AsQueryable();
             }
-            if (books == null) new List<Book>();
+
             return books;
         }
 
@@ -172,6 +202,11 @@ namespace LibShare.Api.Data.Repositories
             {
                 return false;
             }
+        }
+
+        private IQueryable<Book> GetBooksWithoutDeleteItems()
+        {
+            return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
         }
     }
 }

@@ -412,7 +412,7 @@ namespace LibShare.Api.Migrations
             modelBuilder.Entity("LibShare.Api.Data.Entities.Book", b =>
                 {
                     b.HasOne("LibShare.Api.Data.Entities.Category", "Category")
-                        .WithMany("Books")
+                        .WithMany()
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("LibShare.Api.Data.Entities.DbUser", "DbUser")
@@ -427,7 +427,7 @@ namespace LibShare.Api.Migrations
             modelBuilder.Entity("LibShare.Api.Data.Entities.Category", b =>
                 {
                     b.HasOne("LibShare.Api.Data.Entities.Category", "Parent")
-                        .WithMany()
+                        .WithMany("Children")
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
@@ -512,7 +512,7 @@ namespace LibShare.Api.Migrations
 
             modelBuilder.Entity("LibShare.Api.Data.Entities.Category", b =>
                 {
-                    b.Navigation("Books");
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("LibShare.Api.Data.Entities.DbRole", b =>
