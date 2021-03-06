@@ -46,21 +46,12 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books")]
-        public async Task<IActionResult> GetAllBooks([FromQuery] string pageSize, string pageNumber)
+        public IActionResult GetAllBooks([FromQuery] string pageSize, string pageNumber)
         {
-            int size;
-            int page;
-            try
-            {
-               size = int.Parse(pageSize);
-               page = int.Parse(pageNumber);
-            }
-            catch (Exception)
-            {
-                size = 10;
-                page = 1;
-            }
-            var result = await _libraryService.GetAllBooksAsync(SortOrder.Title, size, page);
+            int size, page;
+            ParseData(pageSize, out size, pageNumber, out page);
+
+            var result = _libraryService.GetAllBooks(SortOrder.Title, size, page);
             return Ok(result);
         }
 
@@ -80,7 +71,7 @@ namespace LibShare.Api.Controllers
         }
 
         /// <summary>
-        /// Get books by using pagination and multi-filter.
+        /// Get books by using pagination and multi-filter (many categories and subcategories).
         /// </summary>
         /// <returns>Returns object with data</returns>
         /// <response code="200">Get books by using pagination</response>
@@ -88,22 +79,109 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books-multifilter")]
-        public IActionResult GetAllBooks([FromQuery] string[] categories, string pageSize, string pageNumber)
+        public IActionResult GetAllBooks([FromQuery] string[] chosenCategories, string pageSize, string pageNumber)
         {
-            int size;
-            int page;
-            try
-            {
-                size = int.Parse(pageSize);
-                page = int.Parse(pageNumber);
-            }
-            catch (Exception)
-            {
-                size = 10;
-                page = 1;
-            }
-            var result = _libraryService.FilterByMultiCategoryPaginateSort(categories, SortOrder.Title, size, page);
+            int size, page;
+            ParseData(pageSize, out size, pageNumber, out page);
+
+            var result = _libraryService.FilterByMultiCategorySortPaginate(chosenCategories, SortOrder.Title, size, page);
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Get books by using pagination and simple-filter (only one category and subcategories)
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Get books by using pagination</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("books-filter")]
+        public IActionResult GetAllBooks([FromQuery] string chosenCategory, string pageSize, string pageNumber)
+        {
+            int size, page;
+            ParseData(pageSize, out size, pageNumber, out page);
+
+            var result = _libraryService.FilterByCategorySortPaginate(chosenCategory, SortOrder.Title, size, page);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Search books by using pagination
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Get books by using pagination</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("books-search")]
+        public IActionResult GetSearchBooks([FromQuery] string search, string pageSize, string pageNumber)
+        {
+            int size, page;
+            ParseData(pageSize, out size, pageNumber, out page);
+
+            var result = _libraryService.SearchSortPaginate(search, SortOrder.Title, size, page);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get book by id
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Get book by id</response>
+        /// <response code="404">Book not found</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(BookApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("book")]
+        public async Task<IActionResult> GetBookById([FromQuery] string bookId)
+        {
+            var result = await _libraryService.GetBookByIdAsync(bookId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Update book
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Update book by id</response>
+        /// <response code="404">Book not found</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("book-update")]
+        public async Task<IActionResult> UpdateBook([FromBody] BookApiModel model)
+        {
+            var result = await _libraryService.UpdateBookAsync(model);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Delete book by id
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Delete book by id</response>
+        /// <response code="404">Book not found</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(BookApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("book-delete")]
+        public async Task<IActionResult> DeleteBookById([FromQuery] string bookId)
+        {
+            var result = await _libraryService.DeleteBookAsync(bookId);
+            return Ok(result);
+        }
+
+        private void ParseData(string pageSize, out int size, string pageNumber, out int page)
+        {
+            int.TryParse(pageSize, out size);
+            size = size < 1 ? 10 : size;
+
+            int.TryParse(pageNumber, out page);
+            page = page < 1 ? 1 : page;
         }
     }
 }

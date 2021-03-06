@@ -19,8 +19,6 @@ namespace LibShare.Api.Data.Entities
         [StringLength(255)]
         public string Image { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
-
         [ForeignKey("Parent")]
         public virtual string ParentId { get; set; }
         public virtual Category Parent { get; set; }

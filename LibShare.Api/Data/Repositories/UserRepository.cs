@@ -83,11 +83,11 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<DbUser>> GetAllAsync()
+        public IEnumerable<DbUser> GetAll()
         {
             try
             {
-                return await _context.Users.Include(x => x.UserProfile).ToListAsync();
+                return _context.Users.Include(x => x.UserProfile).AsQueryable();
             }
             catch (Exception)
             {

@@ -39,9 +39,9 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("all-users")]
-        public async Task<IActionResult> GetAllUsersAsync()
+        public IActionResult GetAllUsersAsync()
         {
-            var result = await _userService.GetAllUsersAsync();
+            var result = _userService.GetAllUsers();
             return Ok(result);
         }
 

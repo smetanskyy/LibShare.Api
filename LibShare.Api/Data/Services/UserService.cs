@@ -145,9 +145,9 @@ namespace LibShare.Api.Data.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<UserApiModel>> GetAllUsersAsync()
+        public IEnumerable<UserApiModel> GetAllUsers()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = _userRepository.GetAll();
             if (users.Count() < 1)
             {
                 throw new NotFoundException(_resourceManager.GetString("UsersNotFound"));

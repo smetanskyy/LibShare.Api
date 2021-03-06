@@ -129,6 +129,15 @@
   <data name="BadImageFormatException" xml:space="preserve">
     <value>Неправильний формат зображення!</value>
   </data>
+  <data name="BookDeleted" xml:space="preserve">
+    <value>Книга видалена!</value>
+  </data>
+  <data name="BookNotFound" xml:space="preserve">
+    <value>Книга не знайдена!</value>
+  </data>
+  <data name="ClientDecision" xml:space="preserve">
+    <value>Рішення клієнта!</value>
+  </data>
   <data name="ConfirmEmail" xml:space="preserve">
     <value>Підтвердження електронної пошти!</value>
   </data>

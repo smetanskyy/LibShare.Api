@@ -11,10 +11,10 @@ namespace LibShare.Api.Data.Interfaces
         Task<BookApiModel> CreateBookAsync(BookApiModel book);
         Task<BookApiModel> GetBookByIdAsync(string bookId);
         Task<bool> UpdateBookAsync(BookApiModel book);
-        Task<BookApiModel> DeleteBookAsync(string bookId, string deletionReason);
-        Task<PagedListApiModel<BookApiModel>> GetAllBooksAsync(SortOrder sortOrder, int pageSize = 10, int page = 1);
-        PagedListApiModel<BookApiModel> SearchPaginateSort(string searchString, SortOrder sortOrder, int pageSize = 10, int page = 1);
-        PagedListApiModel<BookApiModel> FilterByMultiCategoryPaginateSort(string[] categories, SortOrder sortOrder, int pageSize = 10, int page = 1);
-        PagedListApiModel<BookApiModel> FilterByCategoryPaginateSort(string categoryIdint, SortOrder sortOrder, int pageSize = 10, int page = 1);
+        Task<MessageApiModel> DeleteBookAsync(string bookId);
+        PagedListApiModel<BookApiModel> GetAllBooks(SortOrder sortOrder, int pageSize = 10, int page = 1);
+        PagedListApiModel<BookApiModel> SearchSortPaginate(string searchString, SortOrder sortOrder, int pageSize = 10, int page = 1);
+        PagedListApiModel<BookApiModel> FilterByMultiCategorySortPaginate(string[] categories, SortOrder sortOrder, int pageSize = 10, int page = 1);
+        PagedListApiModel<BookApiModel> FilterByCategorySortPaginate(string categoryIdint, SortOrder sortOrder, int pageSize = 10, int page = 1);
     }
 }

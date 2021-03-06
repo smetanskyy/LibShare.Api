@@ -8,7 +8,7 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
     {
         IEnumerable<Book> Sort(IEnumerable<Book> books, SortOrder sortOrder);
         IEnumerable<Book> Search(string searchString);
-        IEnumerable<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1);
+        List<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1);
         IEnumerable<Book> FilterByMultiCategory(string[] categories);
         IEnumerable<Book> FilterByCategory(string categoryId);
     }

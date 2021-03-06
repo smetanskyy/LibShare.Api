@@ -59,11 +59,6 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
-        {
-            return await _context.Categories.ToListAsync();
-        }
-
         public IEnumerable<Category> GetAll()
         {
             return _context.Categories.Include(c => c.Children).AsEnumerable().Where(x => x.Parent == null).ToList();
@@ -74,12 +69,35 @@ namespace LibShare.Api.Data.Repositories
             return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        private List<Category> GetChildren(List<Category> categories, string id)
+        {
+            return categories
+                .Where(x => x.ParentId == id)
+                .Union(categories.Where(x => x.ParentId == id)
+                    .SelectMany(y => GetChildren(categories, y.Id))
+                ).ToList();
+        }
+
+        public string[] GetAllSubCategoriesIdFromFilter(string[] chosenCategories)
+        {
+            List<string> categoriesId = new List<string>(chosenCategories);
+
+            foreach (var category in chosenCategories)
+            {
+                List<string> IDs = GetChildren(_context.Categories.ToList(), category).Select(c => c.Id).ToList();
+                categoriesId.AddRange(IDs);
+            }
+
+            return categoriesId.OrderBy(c => c).Distinct().ToArray();
+        }
+
         public async Task<bool> UpdateAsync(Category item)
         {
             if (item == null)
                 return false;
             try
             {
+                item.DateModify = DateTime.Now;
                 _context.Categories.Update(item);
                 await _context.SaveChangesAsync();
                 return true;

@@ -312,8 +312,8 @@ namespace LibShare.Api.Data.Services
 
         public async Task<MessageApiModel> DeleteUserByIdAsync(string userId)
         {
-            await _userRepository.DeleteAsync(userId, "client's decision");
-            await LogoutUserAsync(userId);
+            await _userRepository.DeleteAsync(userId, _resourceManager.GetString("ClientDecision"));
+             await LogoutUserAsync(userId);
             return new MessageApiModel { Message = _resourceManager.GetString("AccountDeleted") };
         }
 

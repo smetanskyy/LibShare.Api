@@ -12,10 +12,12 @@ namespace LibShare.Api.Data.Repositories
     public class BookRepository : IBookRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ICategoryRepository _categoryRepo;
 
-        public BookRepository(ApplicationDbContext context)
+        public BookRepository(ApplicationDbContext context, ICategoryRepository categoryRepo)
         {
             _context = context;
+            _categoryRepo = categoryRepo;
         }
 
         public async Task<Book> CreateAsync(Book item)
@@ -33,6 +35,8 @@ namespace LibShare.Api.Data.Repositories
             try
             {
                 book.IsDeleted = true;
+                book.DateDelete = DateTime.Now;
+                book.DeletionReason = deletionReason;
                 await _context.SaveChangesAsync();
                 return book;
             }
@@ -47,29 +51,26 @@ namespace LibShare.Api.Data.Repositories
             _context.Dispose();
         }
 
-        public IEnumerable<Book> FilterByCategory(string categoryId)
+        public IEnumerable<Book> FilterByCategory(string chosenCategoryId)
         {
-            if (string.IsNullOrWhiteSpace(categoryId))
+            if (chosenCategoryId == null || string.IsNullOrWhiteSpace(chosenCategoryId))
                 return _context.Books.AsQueryable();
 
-            var categoriesFilter = _context.Categories.Include(c => c.Books).AsQueryable();
-            var books = categoriesFilter.FirstOrDefault(c => c.Id == categoryId)?.Books.AsQueryable();
-            return books.Where(b => b.IsDeleted == false).AsQueryable();
+            return FilterByMultiCategory(new[] { chosenCategoryId });
         }
 
-        public IEnumerable<Book> FilterByMultiCategory(string[] categories)
+        public IEnumerable<Book> FilterByMultiCategory(string[] chosenCategories)
         {
-            if (!categories.Any())
-                return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
+            if (chosenCategories == null || !chosenCategories.Any())
+                return _context.Books.AsQueryable();
 
-            var categoriesFilter = _context.Categories.Include(c => c.Books).AsQueryable();
-            var books = new List<Book>();
+            chosenCategories = _categoryRepo.GetAllSubCategoriesIdFromFilter(chosenCategories);
 
-            foreach (var id in categories)
-            {
-                books.AddRange(categoriesFilter.FirstOrDefault(c => c.Id == id)?.Books.ToList());
-            }
-            return books.Any() ? books.Where(b => b.IsDeleted == false) : null;
+            var books = _context.Books
+                .Where(b => b.IsDeleted == false)
+                .Where(c => chosenCategories.Contains(c.CategoryId)).AsQueryable();
+
+            return books;
         }
 
         public async Task<IEnumerable<Book>> FindAsync(Expression<Func<Book, bool>> predicate)
@@ -85,9 +86,9 @@ namespace LibShare.Api.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Book>> GetAllAsync()
+        public IEnumerable<Book> GetAll()
         {
-            return await _context.Books.Where(b => b.IsDeleted == false).ToListAsync();
+            return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
         }
 
         public async Task<Book> GetByIdAsync(string id)
@@ -95,7 +96,7 @@ namespace LibShare.Api.Data.Repositories
             return await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.IsDeleted == false);
         }
 
-        public IEnumerable<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1)
+        public List<Book> Paginate(IEnumerable<Book> books, int pageSize = 10, int page = 1)
         {
             return books.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
@@ -112,6 +113,7 @@ namespace LibShare.Api.Data.Repositories
                                        || b.Year.Contains(searchString)
                                        || b.Description.Contains(searchString)).AsQueryable();
             }
+            if (books == null) new List<Book>();
             return books;
         }
 
@@ -161,6 +163,7 @@ namespace LibShare.Api.Data.Repositories
                 return false;
             try
             {
+                item.DateModify = DateTime.Now;
                 _context.Books.Update(item);
                 await _context.SaveChangesAsync();
                 return true;

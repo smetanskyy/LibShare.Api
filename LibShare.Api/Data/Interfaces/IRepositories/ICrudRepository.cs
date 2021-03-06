@@ -11,7 +11,7 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
         Task<Type> CreateAsync(Type item);
         Task<Type> DeleteAsync(TypeId id, string deletionReason);
         Task<Type> GetByIdAsync(TypeId id);
-        Task<IEnumerable<Type>> GetAllAsync();
+        IEnumerable<Type> GetAll();
         Task<IEnumerable<Type>> FindAsync(Expression<Func<Type, bool>> predicate);
         Task<bool> UpdateAsync(Type item);
     }

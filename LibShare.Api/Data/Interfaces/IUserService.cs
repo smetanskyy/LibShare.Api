@@ -1,6 +1,4 @@
 ﻿using LibShare.Api.Data.ApiModels;
-using LibShare.Api.Data.ApiModels.ResponseApiModels;
-using LibShare.Api.Data.DTO;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -15,7 +13,7 @@ namespace LibShare.Api.Data.Interfaces
         Task<T> GetUserByIdWithFullPhotoUrlAsync(string userId, HttpRequest request);
         Task<ImageApiModel> GetUserPhotoAsync(string userId, HttpRequest request);
         Task<ImageApiModel> UpdateUserPhotoAsync(ImageApiModel model, string userId, HttpRequest request);
-        Task<IEnumerable<T>> GetAllUsersAsync();
+        IEnumerable<T> GetAllUsers();
         Task<IEnumerable<T>> FindUserAsync(Expression<Func<T, bool>> predicate);
         Task<T> CreateUserAsync(UserApiModel model, string password);
         Task<T> DeleteUserByIdAsync(string id, string deletionReason);
