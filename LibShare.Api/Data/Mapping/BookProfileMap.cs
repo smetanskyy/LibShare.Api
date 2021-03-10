@@ -38,7 +38,7 @@ namespace LibShare.Api.Data.Mapping
             {
                 var folderName = _configuration.GetValue<string>("UrlBooks");
                 var currentUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}";
-                destination.Image = Path.Combine(currentUrl, folderName, source.Image);
+                destination.Image = $"{currentUrl}/{folderName}/{source.Image}";
             }
         }
     }
