@@ -82,9 +82,10 @@ namespace LibShare.Api.Data.Services
 
         public async Task<BookApiModel> GetBookByIdAsync(string bookId)
         {
-            var book = await _bookRepo.GetByIdAsync(bookId);
-            if (book == null)
+            var result = await _bookRepo.LookedRate(bookId);
+            if (result == false)
                 throw new NotFoundException(_resourceManager.GetString("BookNotFound"));
+            var book = await _bookRepo.GetByIdAsync(bookId);
             return _mapper.Map<BookApiModel>(book);
         }
 

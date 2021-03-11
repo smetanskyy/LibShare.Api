@@ -212,5 +212,20 @@ namespace LibShare.Api.Data.Repositories
         {
             return _context.Books.Where(b => b.IsDeleted == false).AsQueryable();
         }
+
+        public async Task<bool> LookedRate(string bookId)
+        {
+            try
+            {
+                var book = await GetByIdAsync(bookId);
+                book.LookedRate++;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

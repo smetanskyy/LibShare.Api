@@ -1,6 +1,7 @@
 ﻿using LibShare.Api.Data.Entities;
 using LibShare.Api.Helpers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LibShare.Api.Data.Interfaces.IRepositories
 {
@@ -12,6 +13,6 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
         IEnumerable<Book> FilterByMultiCategory(string[] categories);
         IEnumerable<Book> FilterByCategory(string categoryId);
         IEnumerable<Book> GetBooksByUserId(string userId);
-
+        Task<bool> LookedRate(string bookId);
     }
 }
