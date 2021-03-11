@@ -254,6 +254,7 @@ namespace LibShare.Api.Migrations
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     IsEbook = table.Column<bool>(type: "boolean", nullable: false),
                     File = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    LookedRate = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),

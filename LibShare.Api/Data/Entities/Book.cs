@@ -53,6 +53,8 @@ namespace LibShare.Api.Data.Entities
         [StringLength(255)]
         public string File { get; set; }
 
+        public int LookedRate { get; set; }
+
         public virtual string CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }

@@ -81,6 +81,9 @@ namespace LibShare.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("LookedRate")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Publisher")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");

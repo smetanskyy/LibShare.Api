@@ -1079,7 +1079,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book1.pdf",
                 Language = "English",
                 Publisher = "Barron's Educational Series, Inc.",
-                Year = "2016"
+                Year = "2016",
+                LookedRate = 1
             });
 
             books.Add(new Book
@@ -1111,7 +1112,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book2.pdf",
                 Language = "Пер. с англ. и ред. В.А. Коваленко.",
                 Publisher = "Издательский дом \"Вильяме\"",
-                Year = "2014"
+                Year = "2014",
+                LookedRate = 2
             });
 
             books.Add(new Book
@@ -1137,7 +1139,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book3.pdf",
                 Language = "Русский язык",
                 Publisher = "Издательский дом \"Вильяме\"",
-                Year = "2016"
+                Year = "2016",
+                LookedRate = 3
             });
 
             books.Add(new Book
@@ -1156,7 +1159,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book4.pdf",
                 Language = "English",
                 Publisher = "Microsoft Press",
-                Year = "2013"
+                Year = "2013",
+                LookedRate = 4
             });
 
             books.Add(new Book
@@ -1177,7 +1181,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book5.pdf",
                 Language = "English",
                 Publisher = "apress",
-                Year = "2017"
+                Year = "2017",
+                LookedRate = 5
             });
 
             books.Add(new Book
@@ -1199,7 +1204,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book6.pdf",
                 Language = "Русский язык",
                 Publisher = "Питер",
-                Year = "2013"
+                Year = "2013",
+                LookedRate = 6
             });
 
             books.Add(new Book
@@ -1220,7 +1226,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book7.pdf",
                 Language = "Русский язык",
                 Publisher = "Компьютерное издательство \"Диалектика\"",
-                Year = "2018"
+                Year = "2018",
+                LookedRate = 7
             });
 
             books.Add(new Book
@@ -1242,7 +1249,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book8.pdf",
                 Language = "English",
                 Publisher = "Wintellect",
-                Year = "2002"
+                Year = "2002",
+                LookedRate = 8
             });
 
             books.Add(new Book
@@ -1268,7 +1276,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book9.pdf",
                 Language = "English",
                 Publisher = "John Wiley & Sons, Inc",
-                Year = "2014"
+                Year = "2014",
+                LookedRate = 9
             });
 
             books.Add(new Book
@@ -1289,7 +1298,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book10.pdf",
                 Language = "English",
                 Publisher = "apress",
-                Year = "2018"
+                Year = "2018",
+                LookedRate = 10
             });
 
             books.Add(new Book
@@ -1311,7 +1321,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book11.pdf",
                 Language = "Русский язык",
                 Publisher = "ИНТУИТ",
-                Year = "2016"
+                Year = "2016",
+                LookedRate = 11
             });
 
             books.Add(new Book
@@ -1332,7 +1343,8 @@ namespace LibShare.Api.Data.Entities
                 File = "book12.pdf",
                 Language = "English",
                 Publisher = "Callan Method Organisation Limited",
-                Year = "2013"
+                Year = "2013",
+                LookedRate = 12
             });
 
             context.Books.AddRange(books);
@@ -1340,10 +1352,11 @@ namespace LibShare.Api.Data.Entities
 
             Random random = new Random();
             List<Book> randomList = new List<Book>();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 int randNumber = random.Next(0, 12);
-                randomList.Add(new Book() {
+                randomList.Add(new Book()
+                {
                     Id = Guid.NewGuid().ToString("D"),
                     Title = books[randNumber].Title,
                     Author = books[randNumber].Author,
@@ -1356,7 +1369,8 @@ namespace LibShare.Api.Data.Entities
                     File = books[randNumber].File,
                     Language = books[randNumber].Language,
                     Publisher = books[randNumber].Publisher,
-                    Year = books[randNumber].Year
+                    Year = books[randNumber].Year,
+                    LookedRate = randNumber
                 });
             }
             context.Books.AddRange(randomList);

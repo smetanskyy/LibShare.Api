@@ -49,7 +49,10 @@ namespace LibShare.Api.Data.ApiModels.ResponseApiModels
         /// </summary>
         public bool IsEbook { get; set; }
 
-        // public string File { get; set; }
+        /// <summary>
+        /// How many time look this book
+        /// </summary>
+        public int LookedRate { get; set; }
 
         /// <summary>
         /// Category id

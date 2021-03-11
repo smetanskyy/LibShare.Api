@@ -63,7 +63,8 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books")]
-        public IActionResult GetAllBooks([FromQuery] string pageSize, string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false)
+        public IActionResult GetAllBooks([FromQuery] string pageSize, string pageNumber, 
+            bool onlyEbooks = false, bool onlyRealBooks = false, SortOrder sortOrder = SortOrder.Title)
         {
             int size, page;
             ParseData(pageSize, out size, pageNumber, out page);
@@ -72,6 +73,7 @@ namespace LibShare.Api.Controllers
             BookParameters.PageNumber = page;
             BookParameters.OnlyEbooks = onlyEbooks;
             BookParameters.OnlyRealBooks = onlyRealBooks;
+            BookParameters.SortOrder = sortOrder;
 
             var result = _libraryService.GetAllBooksSortPaginate();
             return Ok(result);
@@ -102,7 +104,8 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books-multifilter")]
-        public IActionResult GetBooksByMultiFilter([FromQuery] string[] chosenCategories, string pageSize, string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false)
+        public IActionResult GetBooksByMultiFilter([FromQuery] string[] chosenCategories, string pageSize, 
+            string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false, SortOrder sortOrder = SortOrder.Title)
         {
             int size, page;
             ParseData(pageSize, out size, pageNumber, out page);
@@ -111,6 +114,8 @@ namespace LibShare.Api.Controllers
             BookParameters.PageNumber = page;
             BookParameters.OnlyEbooks = onlyEbooks;
             BookParameters.OnlyRealBooks = onlyRealBooks;
+            BookParameters.SortOrder = sortOrder;
+
 
             var result = _libraryService.FilterByMultiCategorySortPaginate(chosenCategories);
             return Ok(result);
@@ -125,7 +130,8 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books-filter")]
-        public IActionResult GetBooksByFilter([FromQuery] string chosenCategory, string pageSize, string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false)
+        public IActionResult GetBooksByFilter([FromQuery] string chosenCategory, string pageSize, string pageNumber,
+            bool onlyEbooks = false, bool onlyRealBooks = false, SortOrder sortOrder = SortOrder.Title)
         {
             int size, page;
             ParseData(pageSize, out size, pageNumber, out page);
@@ -134,6 +140,8 @@ namespace LibShare.Api.Controllers
             BookParameters.PageNumber = page;
             BookParameters.OnlyEbooks = onlyEbooks;
             BookParameters.OnlyRealBooks = onlyRealBooks;
+            BookParameters.SortOrder = sortOrder;
+
 
             var result = _libraryService.FilterByCategorySortPaginate(chosenCategory);
             return Ok(result);
@@ -148,7 +156,8 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(PagedListApiModel<BookApiModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books-search")]
-        public IActionResult GetSearchBooks([FromQuery] string search, string pageSize, string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false)
+        public IActionResult GetSearchBooks([FromQuery] string search, string pageSize, string pageNumber,
+            bool onlyEbooks = false, bool onlyRealBooks = false, SortOrder sortOrder = SortOrder.Title)
         {
             int size, page;
             ParseData(pageSize, out size, pageNumber, out page);
@@ -157,6 +166,7 @@ namespace LibShare.Api.Controllers
             BookParameters.PageNumber = page;
             BookParameters.OnlyEbooks = onlyEbooks;
             BookParameters.OnlyRealBooks = onlyRealBooks;
+            BookParameters.SortOrder = sortOrder;
 
             var result = _libraryService.SearchSortPaginate(search);
             return Ok(result);
@@ -225,7 +235,8 @@ namespace LibShare.Api.Controllers
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("books-user")]
         [Authorize]
-        public IActionResult GetBooksByUserId(string pageSize, string pageNumber, bool onlyEbooks = false, bool onlyRealBooks = false)
+        public IActionResult GetBooksByUserId(string pageSize, string pageNumber, bool onlyEbooks = false,
+            bool onlyRealBooks = false, SortOrder sortOrder = SortOrder.Title)
         {
             int size, page;
             ParseData(pageSize, out size, pageNumber, out page);
@@ -233,6 +244,7 @@ namespace LibShare.Api.Controllers
             BookParameters.PageSize = size;
             BookParameters.PageNumber = page;
             BookParameters.OnlyEbooks = onlyEbooks;
+            BookParameters.SortOrder = sortOrder;
             BookParameters.OnlyRealBooks = onlyRealBooks;
 
             var userId = User.FindFirst("id")?.Value;

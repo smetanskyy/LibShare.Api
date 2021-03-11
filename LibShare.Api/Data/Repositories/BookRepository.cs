@@ -158,30 +158,34 @@ namespace LibShare.Api.Data.Repositories
                     books = books.OrderBy(b => b.Title);
                     break;
                 case SortOrder.Author:
-                    books = books.OrderBy(b => b.Author);
+                    books = books.OrderBy(b => b.Author).ThenBy(b => b.Title);
                     break;
                 case SortOrder.Publisher:
-                    books = books.OrderBy(b => b.Publisher);
+                    books = books.OrderBy(b => b.Publisher).ThenBy(b => b.Title);
                     break;
                 case SortOrder.Year:
-                    books = books.OrderByDescending(b => b.Year);
+                    books = books.OrderByDescending(b => b.Year).ThenBy(b => b.Title);
                     break;
                 case SortOrder.Language:
-                    books = books.OrderBy(b => b.Language);
+                    books = books.OrderBy(b => b.Language).ThenBy(b => b.Title);
                     break;
                 case SortOrder.Description:
                     books = books.OrderBy(b => b.Description);
                     break;
                 case SortOrder.Category:
-                    books = books.OrderBy(b => b.CategoryId);
+                    books = books.OrderBy(b => b.CategoryId).ThenBy(b => b.Title);
                     break;
                 case SortOrder.User:
-                    books = books.OrderBy(b => b.UserId);
+                    books = books.OrderBy(b => b.UserId).ThenBy(b => b.Title);
                     break;
                 case SortOrder.DateCreate:
-                    books = books.OrderByDescending(b => b.DateCreate);
+                    books = books.OrderByDescending(b => b.DateCreate).ThenBy(b => b.Title);
+                    break;
+                case SortOrder.LookedRate:
+                    books = books.OrderByDescending(b => b.LookedRate).ThenBy(b => b.Title);
                     break;
                 default:
+                    books = books.OrderBy(b => b.Title);
                     break;
             }
             return books;

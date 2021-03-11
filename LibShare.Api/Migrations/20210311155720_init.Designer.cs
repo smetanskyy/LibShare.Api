@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibShare.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210306033851_init")]
+    [Migration("20210311155720_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,9 @@ namespace LibShare.Api.Migrations
                     b.Property<string>("Language")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("LookedRate")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Publisher")
                         .HasMaxLength(255)

@@ -25,6 +25,7 @@ namespace LibShare.Api.Helpers
         Description,
         Category,
         User,
-        DateCreate
+        DateCreate,
+        LookedRate
     }
 }
