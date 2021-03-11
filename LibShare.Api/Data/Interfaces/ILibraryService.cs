@@ -9,6 +9,7 @@ namespace LibShare.Api.Data.Interfaces
         IEnumerable<CategoryApiModel> GetCategories();
         Task<BookApiModel> CreateBookAsync(BookApiModel book);
         Task<BookApiModel> GetBookByIdAsync(string bookId);
+        Task<CategoryApiModel> GetCategoryByIdAsync(string categoryId);
         Task<BookApiModel> UpdateBookAsync(BookApiModel book);
         Task<MessageApiModel> DeleteBookAsync(string bookId);
         PagedListApiModel<BookApiModel> GetAllBooksSortPaginate();

@@ -112,5 +112,13 @@ namespace LibShare.Api.Data.Services
             await _bookRepo.UpdateAsync(_mapper.Map<Book>(book));
             return await GetBookByIdAsync(book.Id);
         }
+
+        public async Task<CategoryApiModel> GetCategoryByIdAsync(string categoryId)
+        {
+            var category = await _categoryRepo.GetByIdAsync(categoryId);
+            if (category == null)
+                throw new NotFoundException(_resourceManager.GetString("BookNotFound"));
+            return _mapper.Map<CategoryApiModel>(category);
+        }
     }
 }

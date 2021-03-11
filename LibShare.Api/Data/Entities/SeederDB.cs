@@ -1074,9 +1074,9 @@ namespace LibShare.Api.Data.Entities
                 "and maps, classification, matching, and selecting from a list. Students will find: Four practice Academic tests " +
                 "reflective of the most recent exams. Two practice General Training tests An MP3 CD containing audio for all tests" +
                 " and activities. Explanatory answers for all test questions",
-                Image = "Barron's IELTS 4th edition 2016.jpg",
+                Image = "book1.jpg",
                 IsEbook = true,
-                File = "Barron's IELTS 4th edition 2016.pdf",
+                File = "book1.pdf",
                 Language = "English",
                 Publisher = "Barron's Educational Series, Inc.",
                 Year = "2016"
@@ -1106,9 +1106,9 @@ namespace LibShare.Api.Data.Entities
                 "перекрестных ссылок, способных помочь вам объединить взаимосвязанные концепции и проникнуть в суть; Ознакомьтесь " +
                 "с современными методиками обучения и извлеките пользу из упражнений, в которых подчеркиваются ключевые моменты, позволяющие избежать проблем; " +
                 "Освойте лучшие методики программирования и закрепите на практике изученный материал.",
-                Image = "Липпман, Лажойе, Му - Язык программирования С++. Базовый курс, 5-е изд. - 2014.jpg",
+                Image = "book2.jpg",
                 IsEbook = true,
-                File = "Липпман, Лажойе, Му - Язык программирования С++. Базовый курс, 5-е изд. - 2014.pdf",
+                File = "book2.pdf",
                 Language = "Пер. с англ. и ред. В.А. Коваленко.",
                 Publisher = "Издательский дом \"Вильяме\"",
                 Year = "2014"
@@ -1132,9 +1132,9 @@ namespace LibShare.Api.Data.Entities
                 "Книга предназначена в основном для людей, никогда ранее не программировавших.Она опробована более чем тысячей студентов университета. " +
                 "Однако опытные программисты и студенты, уже изучившие основы программирования, также найдут в книге много полезной информации, " +
                 "которая позволит им перейти на более высокий уровень мастерства.",
-                Image = "Страуструп - Программирование. Принципы и практика с использованием C++, 2-е изд. - 2016.jpg",
+                Image = "book3.jpg",
                 IsEbook = true,
-                File = "Страуструп - Программирование. Принципы и практика с использованием C++, 2-е изд. - 2016.pdf",
+                File = "book3.pdf",
                 Language = "Русский язык",
                 Publisher = "Издательский дом \"Вильяме\"",
                 Year = "2016"
@@ -1151,9 +1151,9 @@ namespace LibShare.Api.Data.Entities
                 Description = "Delve inside the Windows Runtime - and learn best ways to design and build Windows Store apps. Guided by Jeffrey Richter, " +
                 "a recognized expert in Windows and .NET programming, along with principal Windows consultant Maarten van de Bospoort, you'll master essential " +
                 "concepts. And you'll gain practical insights and tips for how to architect, design, optimize, and debug your apps.",
-                Image = "Richter, Bospoort - Windows Runtime via C# - 2013.jpg",
+                Image = "book4.jpg",
                 IsEbook = true,
-                File = "Richter, Bospoort - Windows Runtime via C# - 2013.pdf",
+                File = "book4.pdf",
                 Language = "English",
                 Publisher = "Microsoft Press",
                 Year = "2013"
@@ -1172,9 +1172,9 @@ namespace LibShare.Api.Data.Entities
                 "lightweight, cross-platform framework, .NET Core, up to and including .NET Core 2.0. Coverage of ASP.NET Core, Entity Framework (EF) " +
                 "Core, and more, sits alongside the latest updates to .NET, including Windows Presentation Foundation (WPF), Windows Communication " +
                 "Foundation (WCF), and ASP.NET MVC.",
-                Image = "Troelsen, Japikse - Pro C# 7. With .NET and .NET Core, 8th ed. - 2017.jpg",
+                Image = "book5.jpg",
                 IsEbook = true,
-                File = "Troelsen, Japikse - Pro C# 7. With .NET and .NET Core, 8th ed. - 2017.pdf",
+                File = "book5.pdf",
                 Language = "English",
                 Publisher = "apress",
                 Year = "2017"
@@ -1194,9 +1194,9 @@ namespace LibShare.Api.Data.Entities
                 "разработчиков .NET Framework компании Microsoft, книга научит вас создавать по-настоящему надежные приложения любого вида, " +
                 "в том числе с использованием Microsoft Silverlight, ASP.NET, Windows Presentation Foundation и т.д. Четвертое издание полностью " +
                 "обновлено в соответствии со спецификацией платформы.NET Framework 4.5, а также среды Visual Studio 2012 и C# 5.0.",
-                Image = "Рихтер - CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C#, 4-е изд. - 2013.jpg",
+                Image = "book6.jpg",
                 IsEbook = true,
-                File = "Рихтер - CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C#, 4-е изд. - 2013.pdf",
+                File = "book6.pdf",
                 Language = "Русский язык",
                 Publisher = "Питер",
                 Year = "2013"
@@ -1215,9 +1215,9 @@ namespace LibShare.Api.Data.Entities
                 "а также совершенно новые главы о легковесной межплатформенной инфраструктуре Microsoft .NET Core, включая версию .NET Core 2.0. Книга " +
                 "охватывает ASP.NET Core, Entity Framework (EF) Core и т.д. наряду с последними обновлениями платформы .NET, в том числе внесенными в " +
                 "Windows Presentation Foundation (WPF), Windows Communication Foundation (WCF) и ASP.NET MVC.",
-                Image = "Троелсен, Джепикс - Язык программирования C# 7 и платформы .NET и .NET Core - 2018.jpg",
+                Image = "book7.jpg",
                 IsEbook = true,
-                File = "Троелсен, Джепикс - Язык программирования C# 7 и платформы .NET и .NET Core - 2018.pdf",
+                File = "book7.pdf",
                 Language = "Русский язык",
                 Publisher = "Компьютерное издательство \"Диалектика\"",
                 Year = "2018"
@@ -1237,9 +1237,9 @@ namespace LibShare.Api.Data.Entities
                 "programming concepts such as data abstraction, inheritance, and polymorphism. The book carefully explains the extensible type system of the .NET " +
                 "Framework, examines how the runtime manages the behavior of types, and explores how an application manipulates types. While focusing on C#, it " +
                 "presents concepts applicable to all programming languages that target the .NET Framework.",
-                Image = "Richter - Applied Microsoft .NET Framework Programming - 2002.jpg",
+                Image = "book8.jpg",
                 IsEbook = true,
-                File = "Richter - Applied Microsoft .NET Framework Programming - 2002.pdf",
+                File = "book8.pdf",
                 Language = "English",
                 Publisher = "Wintellect",
                 Year = "2002"
@@ -1263,9 +1263,9 @@ namespace LibShare.Api.Data.Entities
                 "with Java For Dummies, 4 Edition is a great place to start. Step-by-step instruction, easy-to-read language, " +
                 "and quick navigation make this book the perfect resource for new programmers. You'll begin with the basics " +
                 "before moving into code, with simple, yet detailed explanations every step of the way.",
-                Image = "Burd - Beginning Programming with Java For Dummies, 4th ed. - 2014.jpg",
+                Image = "book9.jpg",
                 IsEbook = true,
-                File = "Burd - Beginning Programming with Java For Dummies, 4th ed. - 2014.pdf",
+                File = "book9.pdf",
                 Language = "English",
                 Publisher = "John Wiley & Sons, Inc",
                 Year = "2014"
@@ -1284,9 +1284,9 @@ namespace LibShare.Api.Data.Entities
                 "Beginners teaches Java development in language anyone can understand, giving you the best possible start. You’ll see " +
                 "clear code descriptions and layout so that you can get your code running as soon as possible. After reading this book, " +
                 "you'll come away with the basics to get started writing programs in Java.",
-                Image = "Cosmina - Java for Absolute Beginners - 2018.jpg",
+                Image = "book10.jpg",
                 IsEbook = true,
-                File = "Cosmina - Java for Absolute Beginners - 2018.pdf",
+                File = "book10.pdf",
                 Language = "English",
                 Publisher = "apress",
                 Year = "2018"
@@ -1306,9 +1306,9 @@ namespace LibShare.Api.Data.Entities
                 "Java изначально появилась на свет как язык для создания небольших приложений для Интернета(апплетов), " +
                 "но со временем развилась как универсальная платформа для создания программного обеспечения, " +
                 "которое работает буквально везде – от мобильных устройств и смарт - карт до мощных серверов.",
-                Image = "Вязовик - Программирование на Java - 2016.jpg",
+                Image = "book11.jpg",
                 IsEbook = true,
-                File = "Вязовик - Программирование на Java - 2016.pdf",
+                File = "book11.pdf",
                 Language = "Русский язык",
                 Publisher = "ИНТУИТ",
                 Year = "2016"
@@ -1327,15 +1327,39 @@ namespace LibShare.Api.Data.Entities
                 "in an intensive atmosphere.The teacher is constantly asking questions, so you are hearing and using the " +
                 "language as much as possible.When you speak in the lesson, the teacher corrects your grammar and " +
                 "pronunciation mistakes, and you learn a lot from this correction.",
-                Image = "Callan Method 12 - 2013.jpg",
+                Image = "book12.jpg",
                 IsEbook = true,
-                File = "Callan Method 12 - 2013.pdf",
+                File = "book12.pdf",
                 Language = "English",
                 Publisher = "Callan Method Organisation Limited",
                 Year = "2013"
             });
 
             context.Books.AddRange(books);
+            context.SaveChanges();
+
+            Random random = new Random();
+            List<Book> randomList = new List<Book>();
+            for (int i = 0; i < 100; i++)
+            {
+                int randNumber = random.Next(0, 12);
+                randomList.Add(new Book() {
+                    Id = Guid.NewGuid().ToString("D"),
+                    Title = books[randNumber].Title,
+                    Author = books[randNumber].Author,
+                    CategoryId = books[randNumber].CategoryId,
+                    DateCreate = DateTime.Now,
+                    UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
+                    Description = books[randNumber].Description,
+                    Image = books[randNumber].Image,
+                    IsEbook = books[randNumber].IsEbook,
+                    File = books[randNumber].File,
+                    Language = books[randNumber].Language,
+                    Publisher = books[randNumber].Publisher,
+                    Year = books[randNumber].Year
+                });
+            }
+            context.Books.AddRange(randomList);
             context.SaveChanges();
         }
         #endregion

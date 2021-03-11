@@ -7,7 +7,7 @@ namespace LibShare.Api.Helpers
 {
     public static class BookParameters
     {
-        public static SortOrder SortOrder { get; set; } = SortOrder.Title;
+        public static SortOrder SortOrder { get; set; } = SortOrder.Id;
         public static int PageSize { get; set; } = 10;
         public static int PageNumber { get; set; } = 1;
         public static bool OnlyEbooks { get; set; } = false;

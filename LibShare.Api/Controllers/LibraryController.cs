@@ -37,6 +37,24 @@ namespace LibShare.Api.Controllers
         }
 
         /// <summary>
+        /// Get category by id
+        /// </summary>
+        /// <returns>Returns object with data</returns>
+        /// <response code="200">Get category by id</response>
+        /// <response code="404">Category not found</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(CategoryApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("category")]
+        public async Task<IActionResult> GetCategoryById([FromQuery] string categoryId)
+        {
+            var result = await _libraryService.GetCategoryByIdAsync(categoryId);
+            return Ok(result);
+        }
+
+
+        /// <summary>
         /// Get all books by using pagination.
         /// </summary>
         /// <returns>Returns object with data</returns>
