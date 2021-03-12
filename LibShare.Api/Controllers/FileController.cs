@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -12,7 +13,7 @@ namespace LibShare.Api.Controllers
 {
     [Route("api/file")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class FileController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -26,7 +27,7 @@ namespace LibShare.Api.Controllers
 
         [HttpPost, DisableRequestSizeLimit]
         [Route("upload")]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload([FromQuery] string bookId)
         {
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
@@ -35,12 +36,17 @@ namespace LibShare.Api.Controllers
             if (file.Length > 0)
             {
                 var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                var extension = Path.GetExtension(fileName);
+                fileName = bookId + Guid.NewGuid().ToString() + extension;
                 var fullPath = Path.Combine(pathToSave, fileName);
                 var dbPath = Path.Combine(folderName, fileName);
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
+
+
                 return Ok(new { dbPath });
             }
             else

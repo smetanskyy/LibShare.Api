@@ -227,5 +227,20 @@ namespace LibShare.Api.Data.Repositories
                 return false;
             }
         }
+
+        public async Task<bool> SetFileName(string bookId, string filename)
+        {
+            try
+            {
+                var book = await GetByIdAsync(bookId);
+                book.File = filename;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
