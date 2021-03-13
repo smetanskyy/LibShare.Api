@@ -1050,6 +1050,16 @@ namespace LibShare.Api.Data.Entities
                     ParentId = "X"
                 });
 
+            categories.Add(
+                new Category
+                {
+                    Id = "сhild",
+                    Name = "Дитяча література",
+                    Image = null,
+                    DateCreate = DateTime.Now,
+                    ParentId = null
+                });
+
             context.Categories.AddRange(categories);
             context.SaveChanges();
         }
