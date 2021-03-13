@@ -1,0 +1,11 @@
+﻿version: "3.8"
+services:
+    libshareapi:
+        container_name: libshareapi
+        image: smethan/libshareapi:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "5000:80"
+        restart: always
