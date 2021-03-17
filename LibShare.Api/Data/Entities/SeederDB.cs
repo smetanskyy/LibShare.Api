@@ -1359,32 +1359,6 @@ namespace LibShare.Api.Data.Entities
 
             context.Books.AddRange(books);
             context.SaveChanges();
-
-            //Random random = new Random();
-            //List<Book> randomList = new List<Book>();
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    int randNumber = random.Next(0, 12);
-            //    randomList.Add(new Book()
-            //    {
-            //        Id = Guid.NewGuid().ToString("D"),
-            //        Title = books[randNumber].Title,
-            //        Author = books[randNumber].Author,
-            //        CategoryId = books[randNumber].CategoryId,
-            //        DateCreate = DateTime.Now,
-            //        UserId = userManager.FindByEmailAsync("admin@gmail.com").Result.Id,
-            //        Description = books[randNumber].Description,
-            //        Image = books[randNumber].Image,
-            //        IsEbook = books[randNumber].IsEbook,
-            //        File = books[randNumber].File,
-            //        Language = books[randNumber].Language,
-            //        Publisher = books[randNumber].Publisher,
-            //        Year = books[randNumber].Year,
-            //        LookedRate = randNumber
-            //    });
-            //}
-            //context.Books.AddRange(randomList);
-            //context.SaveChanges();
         }
         #endregion
 

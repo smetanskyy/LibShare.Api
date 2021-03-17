@@ -7,9 +7,10 @@ EXPOSE 443
 COPY . ./
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
+RUN mv LibShare.Api/E-Books out/E-Books
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "LibShare.Api.dll"]
