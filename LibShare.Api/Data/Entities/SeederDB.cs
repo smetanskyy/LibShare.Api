@@ -1054,7 +1054,7 @@ namespace LibShare.Api.Data.Entities
                 new Category
                 {
                     Id = "сhild",
-                    Name = "Дитяча література",
+                    Name = "ДИТЯЧА ЛІТЕРАТУРА",
                     Image = null,
                     DateCreate = DateTime.Now,
                     ParentId = null

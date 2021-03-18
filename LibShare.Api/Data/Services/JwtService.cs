@@ -40,7 +40,7 @@ namespace LibShare.Api.Data.Services
 
             var jwt = new JwtSecurityToken(
                 signingCredentials: signinCredentials,
-                expires: DateTime.Now.AddMinutes(20),
+                expires: DateTime.Now.AddMinutes(10),
                 claims: claims);
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
