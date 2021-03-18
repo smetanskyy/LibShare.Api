@@ -218,8 +218,8 @@ namespace LibShare.Api.Data.Services
             user.UserProfile.Phone = model.Phone;
             user.UserProfile.DateOfBirth = model.DateOfBirth;
 
-            if (!string.IsNullOrWhiteSpace(model.Photo))
-                user.UserProfile.Photo = model.Photo;
+            //if (!string.IsNullOrWhiteSpace(model.Photo))
+            //    user.UserProfile.Photo = model.Photo;
 
             await _userRepository.UpdateAsync(user);
             var result = _mapper.Map<UserApiModel>(user);
