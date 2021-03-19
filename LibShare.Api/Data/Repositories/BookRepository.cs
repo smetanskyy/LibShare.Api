@@ -25,6 +25,7 @@ namespace LibShare.Api.Data.Repositories
         {
             if (item == null)
                 return null;
+            item.Image = null;
             _context.Books.Add(item);
             await _context.SaveChangesAsync();
             return item;

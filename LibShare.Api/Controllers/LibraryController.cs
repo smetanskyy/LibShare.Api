@@ -91,6 +91,7 @@ namespace LibShare.Api.Controllers
         [Authorize]
         public async Task<IActionResult> AddBook([FromBody] BookApiModel model)
         {
+            model.Image = null;
             var result = await _libraryService.CreateBookAsync(model);
             return Ok(result);
         }
