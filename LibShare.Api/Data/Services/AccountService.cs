@@ -6,9 +6,9 @@ using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
 using LibShare.Api.Infrastructure.Middleware;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Resources;
@@ -24,13 +24,15 @@ namespace LibShare.Api.Data.Services
         private readonly IJwtService _jwtService;
         private readonly ResourceManager _resourceManager;
         private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
         public AccountService(IUserRepository userRepository,
             UserManager<DbUser> userManager,
             SignInManager<DbUser> signInManager,
             IJwtService jwtService,
             ResourceManager resourceManager,
-            IEmailService emailService)
+            IEmailService emailService,
+            IConfiguration configuration)
         {
             _userRepository = userRepository;
             _userManager = userManager;
@@ -38,6 +40,7 @@ namespace LibShare.Api.Data.Services
             _jwtService = jwtService;
             _resourceManager = resourceManager;
             _emailService = emailService;
+            _configuration = configuration;
         }
 
         public async Task<TokenApiModel> LoginUserAsync(UserLoginApiModel model)
@@ -160,7 +163,7 @@ namespace LibShare.Api.Data.Services
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
         }
 
-        public async Task<MessageApiModel> RestorePasswordSendLinkOnEmailAsync(string userEmail, HttpRequest request)
+        public async Task<MessageApiModel> RestorePasswordSendLinkOnEmailAsync(string userEmail)
         {
             var user = await _userManager.FindByEmailAsync(userEmail);
 
@@ -176,7 +179,7 @@ namespace LibShare.Api.Data.Services
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var serverUrl = $"{request.Scheme}://{request.Host}/";
+            var serverUrl = _configuration.GetValue<string>("ClientSideUrl");
             var url = serverUrl + $"restore?email={user.Email}&token={token}";
 
             var topic = _resourceManager.GetString("RestorePassword");
@@ -250,7 +253,7 @@ namespace LibShare.Api.Data.Services
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
         }
 
-        public async Task<MessageApiModel> ConfirmMailSendLinkOnEmailAsync(string userEmail, HttpRequest request)
+        public async Task<MessageApiModel> ConfirmMailSendLinkOnEmailAsync(string userEmail)
         {
             var user = await _userManager.FindByEmailAsync(userEmail);
 
@@ -271,7 +274,7 @@ namespace LibShare.Api.Data.Services
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var serverUrl = $"{request.Scheme}://{request.Host}/";
+            var serverUrl = _configuration.GetValue<string>("ClientSideUrl");
             var url = serverUrl + $"confirm?email={user.Email}&token={token}";
 
             var topic = _resourceManager.GetString("ConfirmEmail");
@@ -315,7 +318,7 @@ namespace LibShare.Api.Data.Services
         public async Task<MessageApiModel> DeleteUserByIdAsync(string userId)
         {
             await _userRepository.DeleteAsync(userId, _resourceManager.GetString("ClientDecision"));
-             await LogoutUserAsync(userId);
+            await LogoutUserAsync(userId);
             return new MessageApiModel { Message = _resourceManager.GetString("AccountDeleted") };
         }
 

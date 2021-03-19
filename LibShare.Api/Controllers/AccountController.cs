@@ -132,8 +132,8 @@ namespace LibShare.Api.Controllers
             {
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
-
-            var result = await _accountService.RestorePasswordSendLinkOnEmailAsync(model.Email, Request);
+            var test = Request.HttpContext.Connection.RemoteIpAddress;
+            var result = await _accountService.RestorePasswordSendLinkOnEmailAsync(model.Email);
             return Ok(result);
         }
 
@@ -215,7 +215,7 @@ namespace LibShare.Api.Controllers
                 return BadRequest(new MessageApiModel() { Message = validResult.ToString() });
             }
 
-            var result = await _accountService.ConfirmMailSendLinkOnEmailAsync(model.Email, Request);
+            var result = await _accountService.ConfirmMailSendLinkOnEmailAsync(model.Email);
             return Ok(result);
         }
 

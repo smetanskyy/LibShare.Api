@@ -13,11 +13,11 @@ namespace LibShare.Api.Data.Interfaces
         Task<MessageApiModel> LogoutUserAsync(string userId);
         Task<T> RegisterUserAsync(UserRegisterApiModel model);
         Task<T> RefreshTokenAsync(TokenApiModel tokenApiModel);
-        Task<MessageApiModel> RestorePasswordSendLinkOnEmailAsync(string userEmail, HttpRequest request);
+        Task<MessageApiModel> RestorePasswordSendLinkOnEmailAsync(string userEmail);
         Task<T> RestorePasswordBaseAsync(RestoreApiModel model);
         Task<T> ChangeUserPasswordAsync(ChangePasswordApiModel model, string userId);
         Task<MessageApiModel> ConfirmMailBaseAsync(ConfirmApiModel model);
-        Task<MessageApiModel> ConfirmMailSendLinkOnEmailAsync(string userEmail, HttpRequest request);
+        Task<MessageApiModel> ConfirmMailSendLinkOnEmailAsync(string userEmail);
         Task<MessageApiModel> DeleteUserByIdAsync(string userId);
     }
 }
