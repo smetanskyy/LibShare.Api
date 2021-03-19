@@ -129,7 +129,6 @@ namespace LibShare.Api.Data.Services
             {
                 throw new BadRequestException(resultCreated.Errors.First().Description);
             }
-
             var result = _mapper.Map<UserApiModel>(user);
             return result;
         }

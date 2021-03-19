@@ -146,6 +146,15 @@ namespace LibShare.Api.Data.Repositories
             return true;
         }
 
+        public async Task<bool> CreateProfileAsync(string userId)
+        {
+            if (userId == null) return false;
+
+            _context.UserProfile.Add(new UserProfile { Id = userId, RegistrationDate = DateTime.Now, Name = "", Surname = "" });
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public void Dispose()
         {
             _context.Dispose();

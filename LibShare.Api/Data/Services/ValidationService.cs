@@ -111,7 +111,7 @@ namespace LibShare.Api.Data.Services
                 .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
 
             RuleFor(x => x.UserName).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
-                .Length(2, 20).WithMessage(_resourceManager.GetString("UsernameLength"));
+                .Length(2, 100).WithMessage(_resourceManager.GetString("UsernameLength"));
 
             RuleFor(x => x.Password).NotNull().WithMessage(_resourceManager.GetString("PasswordRequired"))
                 .Length(8, 20).WithMessage(_resourceManager.GetString("PasswordLength"))
@@ -194,9 +194,6 @@ namespace LibShare.Api.Data.Services
 
             RuleFor(x => x.Email).NotNull().WithMessage(_resourceManager.GetString("EmailRequired"))
                 .EmailAddress().WithMessage(_resourceManager.GetString("EmailInvalid"));
-
-            RuleFor(x => x.UserName).NotNull().WithMessage(_resourceManager.GetString("UsernameRequired"))
-                .Length(2, 20).WithMessage(_resourceManager.GetString("UsernameLength"));
 
             RuleFor(x => x.DateOfBirth)
                 .Must(IsValidDate).WithMessage(_resourceManager.GetString("DateOfBirthFormat"));

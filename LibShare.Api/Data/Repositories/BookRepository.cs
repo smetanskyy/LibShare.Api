@@ -243,5 +243,13 @@ namespace LibShare.Api.Data.Repositories
                 return false;
             }
         }
+
+        public async Task<Book> GetByIdWithUserAsync(string bookId)
+        {
+            if (bookId == null)
+                return null;
+            
+            return await _context.Books.Include(b => b.DbUser).Where(b => b.Id == bookId).FirstOrDefaultAsync();
+        }
     }
 }

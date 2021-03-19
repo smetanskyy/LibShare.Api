@@ -13,5 +13,6 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
         Task<DbUser> GetByEmailAsync(string email);
         Task<bool> UpdateUserTokenAsync(string userId, string refreshToken);
         Task<bool> UpdateUserPhotoAsync(DbUser user, string photo);
+        Task<bool> CreateProfileAsync(string userId);
     }
 }

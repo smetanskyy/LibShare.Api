@@ -1,4 +1,5 @@
-﻿using LibShare.Api.Data.ApiModels.ResponseApiModels;
+﻿using LibShare.Api.Data.ApiModels.RequestApiModels;
+using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -91,7 +92,9 @@ namespace LibShare.Api.Controllers
         [Authorize]
         public async Task<IActionResult> AddBook([FromBody] BookApiModel model)
         {
+            var userId = User.FindFirst("id")?.Value;
             model.Image = null;
+            model.UserId = userId;
             var result = await _libraryService.CreateBookAsync(model);
             return Ok(result);
         }
@@ -250,6 +253,23 @@ namespace LibShare.Api.Controllers
 
             var userId = User.FindFirst("id")?.Value;
             var result = _libraryService.GetBooksByUserIdSortPaginate(userId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Send message to owner
+        /// </summary>
+        /// <returns>Returns message of result</returns>
+        /// <response code="200">Get books by using pagination</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("send-message-owner")]
+        [Authorize]
+        public async Task<IActionResult> SendMessageOwner([FromBody] CallOwnerApiModel model)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            var result = await _libraryService.SendMessageToOwner(userId, model);
             return Ok(result);
         }
 

@@ -139,7 +139,7 @@ namespace LibShare.Api.Data.Services
             var dbUser = new DbUser
             {
                 Email = model.Email,
-                UserName = model.UserName
+                UserName = model.UserName,
             };
 
             var resultCreated = await _userRepository.CreateAsync(dbUser, model.Password);
@@ -148,6 +148,8 @@ namespace LibShare.Api.Data.Services
             {
                 throw new BadRequestException(resultCreated.Errors.First().Description);
             }
+
+            await _userRepository.CreateProfileAsync(dbUser.Id);
 
             var token = _jwtService.CreateToken(_jwtService.SetClaims(dbUser));
             var refreshToken = _jwtService.CreateRefreshToken();

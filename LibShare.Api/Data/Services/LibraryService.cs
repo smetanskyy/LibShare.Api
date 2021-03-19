@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using LibShare.Api.Data.ApiModels.RequestApiModels;
 using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using LibShare.Api.Data.Entities;
 using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
 using LibShare.Api.Helpers;
 using LibShare.Api.Infrastructure.Middleware;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +22,23 @@ namespace LibShare.Api.Data.Services
         private readonly IBookRepository _bookRepo;
         private readonly IMapper _mapper;
         private readonly ResourceManager _resourceManager;
+        private readonly IEmailService _emailService;
+        private readonly UserManager<DbUser> _userManager;
 
         public LibraryService(
             ICategoryRepository categoryRepo,
             IBookRepository bookRepo,
             IMapper mapper,
-            ResourceManager resourceManager)
+            ResourceManager resourceManager,
+            IEmailService emailService,
+            UserManager<DbUser> userManager)
         {
             _categoryRepo = categoryRepo;
             _bookRepo = bookRepo;
             _mapper = mapper;
             _resourceManager = resourceManager;
+            _emailService = emailService;
+            _userManager = userManager;
         }
 
         public async Task<BookApiModel> CreateBookAsync(BookApiModel book)
@@ -120,6 +129,16 @@ namespace LibShare.Api.Data.Services
             if (category == null)
                 throw new NotFoundException(_resourceManager.GetString("BookNotFound"));
             return _mapper.Map<CategoryApiModel>(category);
+        }
+
+        public async Task<MessageApiModel> SendMessageToOwner(string userId, CallOwnerApiModel model)
+        {
+            var book = await _bookRepo.GetByIdWithUserAsync(model.BookId);
+            var user = await _userManager.Users.Include(u => u.UserProfile).Where(u => u.Id == userId).FirstOrDefaultAsync();
+            string text = model.Text + "<br/>";
+            text = text + "Клієнт: " + user.UserProfile.Name + "<br/>" + "Телефон: " + user.UserProfile.Phone + "<br/>";
+            await _emailService.SendAsync(book.DbUser.Email, model.Subject, text);
+            return new MessageApiModel { Message = "Лист відправлено!" };
         }
     }
 }

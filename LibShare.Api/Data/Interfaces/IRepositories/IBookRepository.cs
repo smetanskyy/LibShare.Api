@@ -15,5 +15,6 @@ namespace LibShare.Api.Data.Interfaces.IRepositories
         IEnumerable<Book> GetBooksByUserId(string userId);
         Task<bool> LookedRate(string bookId);
         Task<bool> SetFileName(string bookId, string filename);
+        Task<Book> GetByIdWithUserAsync(string bookId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using LibShare.Api.Data.ApiModels.ResponseApiModels;
+﻿using LibShare.Api.Data.ApiModels.RequestApiModels;
+using LibShare.Api.Data.ApiModels.ResponseApiModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +18,6 @@ namespace LibShare.Api.Data.Interfaces
         PagedListApiModel<BookApiModel> FilterByMultiCategorySortPaginate(string[] categories);
         PagedListApiModel<BookApiModel> FilterByCategorySortPaginate(string categoryId);
         PagedListApiModel<BookApiModel> GetBooksByUserIdSortPaginate(string userId);
+        Task<MessageApiModel> SendMessageToOwner(string userId, CallOwnerApiModel model);
     }
 }
