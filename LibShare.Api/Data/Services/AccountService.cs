@@ -276,7 +276,6 @@ namespace LibShare.Api.Data.Services
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            Console.WriteLine("Token 1: " + token);
             var serverUrl = _configuration.GetValue<string>("ClientSideUrl") + "confirm";
             var url = QueryHelpers.AddQueryString(serverUrl, "email", user.Email);
             url = QueryHelpers.AddQueryString(url, "token", token);
@@ -310,7 +309,6 @@ namespace LibShare.Api.Data.Services
             }
 
             var confirmResult = await _userManager.ConfirmEmailAsync(user, model.Token);
-            Console.WriteLine("Token 2: " + model.Token);
             if (!confirmResult.Succeeded)
             {
                 throw new BadRequestException(confirmResult.Errors.First().Description);

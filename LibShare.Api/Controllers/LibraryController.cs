@@ -284,6 +284,7 @@ namespace LibShare.Api.Controllers
         [HttpPost("send-message-admin")]
         public async Task<IActionResult> SendMessageAdmin([FromBody] CallAdminApiModel model)
         {
+            System.Console.WriteLine(model.Email);
             var result = await _libraryService.SendMessageToAdmin(model);
             return Ok(result);
         }
