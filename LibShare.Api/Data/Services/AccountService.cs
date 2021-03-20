@@ -329,7 +329,7 @@ namespace LibShare.Api.Data.Services
             try
             {
                 await _signInManager.SignOutAsync();
-                await _userRepository.UpdateUserTokenAsync(userId, null);
+                await _userRepository.UpdateUserTokenAsync(userId, "");
                 return new MessageApiModel { Message = _resourceManager.GetString("LogoutUser") };
             }
             catch (Exception)
