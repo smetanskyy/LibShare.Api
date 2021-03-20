@@ -48,8 +48,21 @@ namespace LibShare.Api.Data.Repositories
             try
             {
                 user.IsDeleted = true;
-                var record = new AccessProhibited { DateDelete = DateTime.Now, Id = id, DeletionReason = deletionReason };
-                _context.AccessProhibited.Add(record);
+                _context.Users.Update(user);
+
+                var record = _context.AccessProhibited.Find(id);
+                if (record == null)
+                {
+                    record = new AccessProhibited { DateDelete = DateTime.Now, Id = id, DeletionReason = deletionReason };
+                    _context.AccessProhibited.Add(record);
+                }
+                else
+                {
+                    record.DateDelete = DateTime.Now;
+                    record.DeletionReason = deletionReason;
+                    _context.AccessProhibited.Update(record);
+                }
+
                 await _context.SaveChangesAsync();
                 return user;
             }
