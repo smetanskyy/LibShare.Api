@@ -260,7 +260,7 @@ namespace LibShare.Api.Controllers
         /// Send message to owner
         /// </summary>
         /// <returns>Returns message of result</returns>
-        /// <response code="200">Get books by using pagination</response>
+        /// <response code="200">Returns message of result</response>
         /// <response code="500">Internal server error.</response>
         [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
@@ -270,6 +270,21 @@ namespace LibShare.Api.Controllers
         {
             var userId = User.FindFirst("id")?.Value;
             var result = await _libraryService.SendMessageToOwner(userId, model);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Send message to admin
+        /// </summary>
+        /// <returns>Returns message of result</returns>
+        /// <response code="200">Returns message of result</response>
+        /// <response code="500">Internal server error.</response>
+        [ProducesResponseType(typeof(MessageApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
+        [HttpPost("send-message-admin")]
+        public async Task<IActionResult> SendMessageAdmin([FromBody] CallAdminApiModel model)
+        {
+            var result = await _libraryService.SendMessageToAdmin(model);
             return Ok(result);
         }
 

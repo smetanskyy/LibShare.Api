@@ -140,5 +140,16 @@ namespace LibShare.Api.Data.Services
             await _emailService.SendAsync(book.DbUser.Email, model.Subject, text);
             return new MessageApiModel { Message = "Лист відправлено!" };
         }
+
+        public async Task<MessageApiModel> SendMessageToAdmin(CallAdminApiModel model)
+        {
+            //string text = model.Text + "<br/>";
+            //text = text + "Клієнт: " + model.Name + "<br/>" + "Телефон: " + model.Phone + "<br/>" + "Email: " + model.Email + "<br/>";
+
+            var subject = "Повідомлення отримано";
+            var body = "Ми якомога швидше Вам допоможемо та дамо відповіді на Ваші запитання.";
+            await _emailService.SendAsync(model.Email, subject, body);
+            return new MessageApiModel { Message = "Лист отримано!" };
+        }
     }
 }

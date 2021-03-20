@@ -19,5 +19,6 @@ namespace LibShare.Api.Data.Interfaces
         PagedListApiModel<BookApiModel> FilterByCategorySortPaginate(string categoryId);
         PagedListApiModel<BookApiModel> GetBooksByUserIdSortPaginate(string userId);
         Task<MessageApiModel> SendMessageToOwner(string userId, CallOwnerApiModel model);
+        Task<MessageApiModel> SendMessageToAdmin(CallAdminApiModel model);
     }
 }

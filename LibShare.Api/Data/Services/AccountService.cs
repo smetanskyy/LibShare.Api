@@ -160,6 +160,7 @@ namespace LibShare.Api.Data.Services
             await _userRepository.UpdateUserTokenAsync(dbUser.Id, refreshToken);
             await _signInManager.SignInAsync(dbUser, isPersistent: false);
 
+            await ConfirmMailSendLinkOnEmailAsync(dbUser.Email);
             return new TokenApiModel { Token = token, RefreshToken = refreshToken };
         }
 
