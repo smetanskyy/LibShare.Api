@@ -7,6 +7,7 @@ using LibShare.Api.Data.Interfaces;
 using LibShare.Api.Data.Interfaces.IRepositories;
 using LibShare.Api.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -180,8 +181,9 @@ namespace LibShare.Api.Data.Services
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var serverUrl = _configuration.GetValue<string>("ClientSideUrl");
-            var url = serverUrl + $"restore?email={user.Email}&token={token}";
+            var serverUrl = _configuration.GetValue<string>("ClientSideUrl") + "restore";
+            var url = QueryHelpers.AddQueryString(serverUrl, "email", user.Email);
+            url = QueryHelpers.AddQueryString(url, "token", token);
 
             var topic = _resourceManager.GetString("RestorePassword");
 
@@ -274,9 +276,10 @@ namespace LibShare.Api.Data.Services
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            var serverUrl = _configuration.GetValue<string>("ClientSideUrl");
-            var url = serverUrl + $"confirm?email={user.Email}&token={token}";
+            Console.WriteLine("Token 1: " + token);
+            var serverUrl = _configuration.GetValue<string>("ClientSideUrl") + "confirm";
+            var url = QueryHelpers.AddQueryString(serverUrl, "email", user.Email);
+            url = QueryHelpers.AddQueryString(url, "token", token);
 
             var topic = _resourceManager.GetString("ConfirmEmail");
 
@@ -307,7 +310,7 @@ namespace LibShare.Api.Data.Services
             }
 
             var confirmResult = await _userManager.ConfirmEmailAsync(user, model.Token);
-
+            Console.WriteLine("Token 2: " + model.Token);
             if (!confirmResult.Succeeded)
             {
                 throw new BadRequestException(confirmResult.Errors.First().Description);
